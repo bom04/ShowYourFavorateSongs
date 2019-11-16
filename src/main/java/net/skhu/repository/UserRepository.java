@@ -36,6 +36,5 @@ public interface UserRepository extends JpaRepository<User, Integer>  {
 	@Query(value="update User u set u.password=:password,u.message=:message,u.nickname=:nickname where u.user_idx=:user_idx",nativeQuery=true)
 	void updateProfile(@RequestParam("user_idx") int user_idx,@RequestParam("message") String message,@RequestParam("nickname") String nickname,@RequestParam("password") String password);
 
-
 }
 

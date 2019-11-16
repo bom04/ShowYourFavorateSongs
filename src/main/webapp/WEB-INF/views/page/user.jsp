@@ -51,15 +51,22 @@
 								수정</button>
 						</c:if>
 						<c:choose>
-							<c:when test="${u.user_idx eq user.user_idx}">
+							<c:when test="${u.user_idx eq user.user_idx}"> <!-- 본인의 마이페이지 일때 -->
 								<button type="button" class="btn btn-default btn4"
 									style="border: 1px solid grey">팔로우</button>
 							</c:when>
-							<c:otherwise>
-								
-								<button type="button" class="btn btn-default btn4"
-									style="border: 1px solid grey"
-									data-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
+							<c:otherwise> <!-- 본인의 마이페이지가 아닐때-->
+								<c:choose>
+									<c:when test="${follow eq true}"> <!-- 이미 팔로우한 유저일때 -->
+										<button type="button" class="btn btn-primary btn4" delete-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
+									</c:when>
+									<c:otherwise> <!-- 팔로우가 안되어있는 유저일때 -->
+										<button type="button" class="btn btn-default btn4"
+											style="border: 1px solid grey"
+											data-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
+									</c:otherwise>
+								</c:choose>
+
 							</c:otherwise>
 						</c:choose>
 						<div class="btn btn-primary btn4"

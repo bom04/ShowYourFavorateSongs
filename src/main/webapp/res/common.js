@@ -22,9 +22,18 @@ $(function() {
 		if(url[3]=='') {
 			url[3]=-1;
 		}
-		alert(url[0]);
 		if(result) {
 			location.href ="/page/follow?user_idx="+url[0]+"&kara_type="+url[1]+"&sort="+url[2]+"&my_user_idx="+url[3];
+		}
+	});
+	$("[delete-follow]").click(function() {
+		var url = $(this).attr("delete-follow").split(" ");
+		var result= confirm("언팔로우를 하시겠습니까?");
+		if(url[3]=='') {
+			url[3]=-1;
+		}
+		if(result) {
+			location.href ="/page/unfollow?user_idx="+url[0]+"&kara_type="+url[1]+"&sort="+url[2]+"&my_user_idx="+url[3];
 		}
 	});
 	

@@ -21,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,6 @@ import net.skhu.domain.Board;
 import net.skhu.domain.Comment;
 import net.skhu.domain.Comment_like;
 import net.skhu.domain.File2;
-import net.skhu.domain.Follow;
 import net.skhu.domain.Post;
 import net.skhu.domain.Post_like;
 import net.skhu.domain.Reply;
@@ -126,6 +126,7 @@ public class APIController {
 	@RequestMapping(value = "join_success", method = RequestMethod.GET)
 	public String join_success(Model model, @RequestParam("auth_key") String auth_key) {
 		User user = userRepository.findByAuth_key(auth_key);
+		user.setAuth_key(user.getEmail());
 		userRepository.updateAuth_key(user.getEmail());
 		return "page/join_success";
 	}
@@ -256,17 +257,88 @@ public class APIController {
 			return "redirect:/page/login";
 		Optional<User> other_user=userRepository.findById(user_idx);
 		Optional<User> my_user=userRepository.findById(my_user_idx);
-		System.out.println("follow redirect");
-		followRepository.save(new Follow(my_user.get(),other_user.get()));
+		User my_user1=my_user.get();
+		User other_user1=other_user.get();
+
+
+		my_user1.addFollower(other_user1);
+		// userRepository.save(other_user1); // 근데 왜 follow의 id 번호값이 들쑥날쑥하지?무더기로 저장되기도 하고 참...
+		userRepository.save(my_user1);
+		System.out.println("크기:"+my_user1.getUsers3().size());
+		//		for(int i=0;i<my_user1.getUsers2().size();i++) { // my_user1와 other_user1하고 size()가 다름
+		//			if(my_user1.getUsers2().get(i).getUser_idx()==other_user1.getUser_idx()) { // 팔로우를 이미 한 사람이면
+		//
+		//			}
+		//			System.out.println("내가 팔로우한 상대방 id: "+my_user1.getUsers2().get(i).getUser_idx()); // 내가 팔로우한 target_user_idx를 반환==other_user1인지 확인해야됨
+		//		}
+		//		for(int i=0;i<other_user1.getUsers3().size();i++) { // my_user1와 other_user1하고 size()가 다름
+		//			System.out.println(other_user1.getUsers3().get(i).getUser_idx()); // 현재 마이페이지의 유저를 팔로우 한 user_idx가 반환됨==my_user1인지 확인
+		//		}
+
+
 		System.out.println("에러3");
 		return "redirect:/page/user?user_idx="+user_idx+"&kara_type="+kara_type+"&sort="+sort;
 	}
+	@RequestMapping(value = "unfollow", method = RequestMethod.GET)
+	public String unfollow(Model model,@RequestParam("user_idx") int user_idx,@RequestParam("kara_type") int kara_type,@RequestParam("sort") int sort,@RequestParam("my_user_idx") int my_user_idx) {
+		if(my_user_idx==-1)
+			return "redirect:/page/login";
+		Optional<User> other_user=userRepository.findById(user_idx);
+		Optional<User> my_user=userRepository.findById(my_user_idx);
+		User my_user1=my_user.get();
+		User other_user1=other_user.get();
+		int n=-1,m=-1;
+		for(int i=0;i<my_user1.getUsers2().size();i++) { // my_user1와 other_user1하고 size()가 다름
+			if(my_user1.getUsers2().get(i).getUser_idx()==other_user1.getUser_idx()) { // 팔로우를 이미 한 사람이면
+				n=i;
+			}
+			// System.out.println("내가 팔로우한 상대방 id: "+my_user1.getUsers2().get(i).getUser_idx()); // 내가 팔로우한 target_user_idx를 반환==other_user1인지 확인해야됨
+		}
+		if(n!=-1)
+			my_user1.getUsers2().remove(n);
+		for(int i=0;i<my_user1.getUsers2().size();i++) { // my_user1와 other_user1하고 size()가 다름
+			System.out.println("내가 팔로우한 상대방 id: "+my_user1.getUsers2().get(i).getUser_idx()); // 내가 팔로우한 target_user_idx를 반환==other_user1인지 확인해야됨
+		}
+		for(int i=0;i<other_user1.getUsers3().size();i++) { // my_user1와 other_user1하고 size()가 다름
+			if(other_user1.getUsers3().get(i).getUser_idx()==my_user1.getUser_idx()) { // 팔로우를 이미 한 사람이면
+				m=i;
+			}
+			// System.out.println("상대방을 팔로워한 user_idx: "+other_user1.getUsers3().get(i).getUser_idx()); // 현재 마이페이지의 유저를 팔로우 한 user_idx가 반환됨==my_user1인지 확인
+		}
+		if(m!=-1)
+			other_user1.getUsers3().remove(m);
+		for(int i=0;i<other_user1.getUsers3().size();i++) { // my_user1와 other_user1하고 size()가 다름
+			System.out.println("상대방을 팔로워한 user_idx: "+other_user1.getUsers3().get(i).getUser_idx()); // 현재 마이페이지의 유저를 팔로우 한 user_idx가 반환됨==my_user1인지 확인
+		}
+		userRepository.save(my_user1);
+		return "redirect:/page/user?user_idx="+user_idx+"&kara_type="+kara_type+"&sort="+sort;
+	}
+	@Transactional
 	@RequestMapping(value = "user", method = RequestMethod.GET)
 	public String user(Model model,@RequestParam("user_idx") int user_idx,@RequestParam("kara_type") int kara_type,@RequestParam("sort") int sort,final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
 		Optional<User> optinalEntity2=userRepository.findById(user_idx);
 		User user = optinalEntity2.get();
 		List<Song_like> song_likes=song_likeRepository.findByUser_idxAndKara_type(user.getUser_idx(),kara_type);
 		User me = (User) session.getAttribute("user");
+
+		Optional<User> mee=null;
+		User me2=null;
+		// System.out.println("내 id:"+me.getUser_idx());
+		boolean followResult=false;
+
+		if(me!=null) {
+			mee=userRepository.findById(me.getUser_idx());
+			me2=mee.get();
+			for(int i=0;i<me2.getUsers2().size();i++) { // 바로 session으로 getUsers2를 접근하면 no session 오류 발생해서 우회로 해결
+				if(me2.getUsers2().get(i).getUser_idx()==user.getUser_idx()) { // 팔로우를 이미 한 사람이면
+					model.addAttribute("follow",true);
+					followResult=true;
+				}
+
+			}
+		}
+		if(!followResult) // 팔로우를 한 사람이 아니라면
+			model.addAttribute("follow",false);
 
 		Comparator<Song_like> salesComparator;
 		if(sort==0) { // 가수별 정렬일때
@@ -309,8 +381,8 @@ public class APIController {
 		System.out.println("changeProfile post");
 		System.out.println("nickname:"+nickname+" message:"+message+" password:"+password);
 		userRepository.updateProfile(user.getUser_idx(),message,nickname,password);
-//		session.invalidate();
-//		session.setAttribute("user", user);
+		//		session.invalidate();
+		//		session.setAttribute("user", user);
 		return "redirect:/page/user?user_idx="+user.getUser_idx()+"&kara_type=0&sort=0";
 	}
 
