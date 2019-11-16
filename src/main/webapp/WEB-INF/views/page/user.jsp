@@ -51,16 +51,21 @@
 								수정</button>
 						</c:if>
 						<c:choose>
-							<c:when test="${u.user_idx eq user.user_idx}"> <!-- 본인의 마이페이지 일때 -->
+							<c:when test="${u.user_idx eq user.user_idx || user.manager eq true}">
+								<!-- 본인의 마이페이지 일때 -->
 								<button type="button" class="btn btn-default btn4"
 									style="border: 1px solid grey">팔로우</button>
 							</c:when>
-							<c:otherwise> <!-- 본인의 마이페이지가 아닐때-->
+							<c:otherwise>
+								<!-- 본인의 마이페이지가 아닐때-->
 								<c:choose>
-									<c:when test="${follow eq true}"> <!-- 이미 팔로우한 유저일때 -->
-										<button type="button" class="btn btn-primary btn4" delete-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
+									<c:when test="${follow eq true}">
+										<!-- 이미 팔로우한 유저일때 -->
+										<button type="button" class="btn btn-primary btn4"
+											delete-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
 									</c:when>
-									<c:otherwise> <!-- 팔로우가 안되어있는 유저일때 -->
+									<c:otherwise>
+										<!-- 팔로우가 안되어있는 유저일때 -->
 										<button type="button" class="btn btn-default btn4"
 											style="border: 1px solid grey"
 											data-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
@@ -70,7 +75,7 @@
 							</c:otherwise>
 						</c:choose>
 						<div class="btn btn-primary btn4"
-							style="border: 1px solid #BDBDBD; background: #fff; color: #BDBDBD;">0</div>
+							style="border: 1px solid #BDBDBD; background: #fff; color: #BDBDBD;">${followedNum}</div>
 
 						<!--유저 삭제-->
 						<c:choose>
@@ -84,7 +89,15 @@
 						<div style="margin-top: 30px; color: #2E2E2E;">
 							<span style="font-weight: bold;"> <a href="#modalLayer"
 								class="modalLink"
-								style="text-decoration: none; margin-right: 20px;">팔로우 2</a>
+								style="text-decoration: none; margin-right: 20px;">팔로우 
+								<c:choose>
+										<c:when test="${empty followingList}">0</c:when>
+										<c:otherwise>
+											<c:set var="followingListNum"
+												value="${fn:length(followingList)}" />${followingListNum}
+								</c:otherwise>
+									</c:choose>
+							</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
 								href="userPost.html" style="text-decoration: none;">포스트 0</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
@@ -161,16 +174,22 @@
 					</div>
 				</div>
 
+
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-primary btn-lg"
+					data-toggle="modal" data-target="#myModal">Launch demo
+					modal</button>
+
 				<div id="modalLayer">
 					<div class="modalContent">
 						팔로우 목록
 						<table>
-							<tr id="tr">
-								<td><a href="user2.html" style="cursor: pointer">노래방죽순이</a></td>
-							</tr>
-							<tr>
-								<td><a href="#" style="cursor: pointer">BTS</a></td>
-							</tr>
+							<c:forEach var="following" items="${followingList}"
+								varStatus="status">
+								<tr id="tr">
+									<td><a href="/page/user?user_idx=${following.user_idx}&kara_type=0&sort=0" style="cursor: pointer">${following.nickname}</a></td>
+								</tr>
+							</c:forEach>
 						</table>
 						<button type="button" class="btn btn-primary btn3"
 							style="float: right; border: 1px solid #FA5858; background: #FA5858;">닫기</button>

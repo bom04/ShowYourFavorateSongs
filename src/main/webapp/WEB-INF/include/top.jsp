@@ -16,7 +16,7 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- <script src="${R}res/common.js"></script>-->
 <link rel="stylesheet" href="${R}res/common.css">
-
+ 
 
 <!-- jQuery -->
 <!-- <script

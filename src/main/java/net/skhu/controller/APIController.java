@@ -322,8 +322,7 @@ public class APIController {
 		User me = (User) session.getAttribute("user");
 
 		Optional<User> mee=null;
-		User me2=null;
-		// System.out.println("내 id:"+me.getUser_idx());
+		User me2=null; // 세션한 저장된 로그인된 유저를 저장함(바로 세션에서 이용하면 no session 오류 발생해서..)
 		boolean followResult=false;
 
 		if(me!=null) {
@@ -339,6 +338,15 @@ public class APIController {
 		}
 		if(!followResult) // 팔로우를 한 사람이 아니라면
 			model.addAttribute("follow",false);
+
+		int followedNum=0; // 현 마이페이지의 유저를 팔로우한 사람들의 수
+		for(int i=0;i<user.getUsers3().size();i++) { // my_user1와 other_user1하고 size()가 다름
+			followedNum++;
+			System.out.println("상대방을 팔로워한 user_idx: "+user.getUsers3().get(i).getUser_idx()); // 현재 마이페이지의 유저를 팔로우 한 user_idx가 반환됨==my_user1인지 확인
+		}
+		model.addAttribute("followedNum",followedNum);
+
+		model.addAttribute("followingList",user.getUsers2());
 
 		Comparator<Song_like> salesComparator;
 		if(sort==0) { // 가수별 정렬일때
