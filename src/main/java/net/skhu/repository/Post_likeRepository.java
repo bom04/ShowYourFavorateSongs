@@ -1,5 +1,7 @@
 package net.skhu.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +21,11 @@ public interface Post_likeRepository extends JpaRepository<Post_like, Integer>{
 	@Modifying
 	@Query("DELETE FROM Post_like p WHERE p.post.post_id=:post_id and p.user.user_idx=:user_idx")
 	void deletePost_like(@RequestParam("post_id") int post_id,@RequestParam("user_idx") int user_idx);
+	
+	@Query("select p from Post_like p where p.user.user_idx=:user_idx")
+	List<Post_like> findLikeByUserIdx(@RequestParam("user_idx") int user_idx);
+	
+	@Query("select count(p) from Post_like p where p.user.user_idx=:user_idx")
+	int likeNumByUser(@RequestParam("user_idx") int user_idx);
+	
 }

@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <c:url var="R" value="/" />
 <!-- 이게 원래 css코드임 
@@ -68,7 +69,7 @@
 							</p>
 							<p class="lead" style="margin-right: 20px; float: right;">
 								<img
-									src="${pageContext.request.contextPath}/res/images/date.png" />&nbsp;${post.date}
+									src="${pageContext.request.contextPath}/res/images/date.png" />&nbsp;<fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm"/>
 							</p>
 						</div>
 

@@ -48,10 +48,11 @@
 						<table class="table table-hover" style="margin-top: 100px;">
 							<thead>
 								<tr>
-									<th>게시판</th>
-									<th>제목</th>
-									<th>작성자</th>
-									<th>작성일</th>
+									<th colspan=2>게시판</th>
+									<th colspan=2>제목</th>
+									<th colspan=2>작성자</th>
+									<th colspan=2>작성일</th>
+									<th>댓글</th>
 									<th>조회수</th>
 									<th>추천수</th>
 								</tr>
@@ -77,17 +78,18 @@
 										test="${num>fn:length(finded)-10*pg && num<=fn:length(finded)-10*(pg-1)}">
 
 										<tr>
-											<td>${singeFinded.board.board_name}</td>
-											<td><a href="post/${singeFinded.post_id}"
-												style="text-decoration: none; font-weight: bold; color: grey">${singeFinded.title}[${commentAndReplyNum}]</a></td>
+											<td colspan=2>${singeFinded.board.board_name}</td>
+											<td colspan=2><a href="post/${singeFinded.post_id}"
+												style="text-decoration: none; font-weight: bold; color: grey">${singeFinded.title}</a></td>
 											<c:set var="theString" value="${singeFinded.user.nickname}" />
-											<td><c:if test="${fn:contains(theString,'관리자')}">${singeFinded.user.nickname}</c:if>
+											<td colspan=2><c:if test="${fn:contains(theString,'관리자')}">${singeFinded.user.nickname}</c:if>
 												<c:if test="${fn:indexOf(theString,'관리자')==-1}">
 													<a
 														href="user?user_idx=${singeFinded.user.user_idx}&kara_type=0&sort=0"
 														style="text-decoration: none; font-weight: bold; color: grey">${singeFinded.user.nickname}</a>
 												</c:if></td>
-											<td>${singeFinded.date}</td>
+											<td colspan=2><fmt:formatDate value="${singeFinded.date}" pattern="yy/MM/dd HH:mm"/></td>
+											<td>${commentAndReplyNum}</td>
 											<td>${singeFinded.view}</td>
 											<td><c:choose>
 													<c:when

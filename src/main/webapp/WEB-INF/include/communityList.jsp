@@ -31,7 +31,7 @@
 			<!--게시판 내비게이션-->
 			<ul class="nav nav-tabs">
 				<li class="nav-item"><a class="nav-link"
-					style="cursor: pointer" data-url="/page/bestBoard">베스트</a></li>
+					style="cursor: pointer" data-url="/page/bestBoard?pg=1">베스트</a></li>
 				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/freeBoard?pg=1">자유
 						게시판</a></li>
 				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/tipBoard?pg=1">팁

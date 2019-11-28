@@ -17,7 +17,7 @@ import lombok.Data;
 //@ToString(exclude = {"posts"})
 @Data
 @Entity
-public class Post_like {
+public class Post_like implements Comparable<Object>{
 	public Post_like() { }
 
 	public Post_like(Post post,User user,Date date) {
@@ -41,5 +41,11 @@ public class Post_like {
 	@ManyToOne
 	@JoinColumn(name = "user_idx")
 	User user;
+
+	@Override
+	public int compareTo(Object o) {
+		Post_like pl=(Post_like)o;
+		return pl.date.compareTo(this.date);
+	}
 
 }

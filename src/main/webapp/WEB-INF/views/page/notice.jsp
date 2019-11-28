@@ -51,9 +51,10 @@
 						<thead>
 							<tr>
 								<th>번호</th>
-								<th>제목</th>
-								<th>작성자</th>
-								<th>날짜</th>
+								<th colspan=2>제목</th>
+								<th colspan=2>작성자</th>
+								<th colspan=2>날짜</th>
+								<th>댓글</th>
 								<th>조회</th>
 								<th>추천</th>
 							</tr>
@@ -77,11 +78,12 @@
 
 									<tr>
 										<td><c:out value="${num}" /></td>
-										<td><a href="post/${post.post_id}"
-											style="text-decoration: none; font-weight: bold; color: grey">${post.title}[${commentAndReplyNum}]
+										<td colspan=2><a href="post/${post.post_id}"
+											style="text-decoration: none; font-weight: bold; color: grey">${post.title}
 										</a></td>
-										<td>${post.user.nickname}</td>
-										<td>${post.date}</td>
+										<td colspan=2>${post.user.nickname}</td>
+										<td colspan=2><fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm"/></td>
+										<td>${commentAndReplyNum}</td>
 										<td>${post.view}</td>
 										<td><c:choose>
 												<c:when test="${map_like.containsKey(post.post_id) eq true}">
@@ -89,6 +91,7 @@
 												</c:when>
 												<c:otherwise>0</c:otherwise>
 											</c:choose></td>
+										
 									</tr>
 								</c:if>
 							</c:forEach>

@@ -45,10 +45,13 @@ import net.skhu.domain.Comment_like;
 import net.skhu.domain.File2;
 import net.skhu.domain.Post;
 import net.skhu.domain.Post_like;
+import net.skhu.domain.Rank_KY;
+import net.skhu.domain.Rank_TJ;
 import net.skhu.domain.Reply;
 import net.skhu.domain.Song;
 import net.skhu.domain.Song_like;
 import net.skhu.domain.User;
+import net.skhu.model.UserModel;
 import net.skhu.repository.BoardRepository;
 import net.skhu.repository.CommentRepository;
 import net.skhu.repository.Comment_likeRepository;
@@ -56,9 +59,11 @@ import net.skhu.repository.File2Repository;
 import net.skhu.repository.FollowRepository;
 import net.skhu.repository.PostRepository;
 import net.skhu.repository.Post_likeRepository;
+import net.skhu.repository.Rank_KYRepository;
+import net.skhu.repository.Rank_TJRepository;
 import net.skhu.repository.ReplyRepository;
 import net.skhu.repository.Reply_likeRepository;
-import net.skhu.repository.SongRepositroy;
+import net.skhu.repository.SongRepository;
 import net.skhu.repository.Song_likeRepository;
 import net.skhu.repository.UserRepository;
 
@@ -66,6 +71,7 @@ import net.skhu.repository.UserRepository;
 @Controller
 @RequestMapping("/page")
 public class APIController {
+
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
@@ -88,32 +94,63 @@ public class APIController {
 	@Autowired
 	Reply_likeRepository reply_likeRepository;
 	@Autowired
-	SongRepositroy songRepositroy;
+	SongRepository songRepository;
 	@Autowired
 	Song_likeRepository song_likeRepository;
 	@Autowired
 	FollowRepository followRepository;
+
+	@Autowired
+	Rank_KYRepository rank_KYRepository;
+	@Autowired
+	Rank_TJRepository rank_TJRepository;
+
 	//가입
 	@RequestMapping(value = "join", method = RequestMethod.GET)
-	public String join(Model model) {
+	public String join(Model model,UserModel userModel) {
 		List<User> users = userRepository.findAll();
-		model.addAttribute("users", users);
-		// System.out.println("갯수:"+users.size());
+		//model.addAttribute("users", users);
+		model.addAttribute("userModel",userModel);
 		return "page/join";
 	}
 
+    public boolean hasErrors(UserModel userModel, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) // @notEmpty,@notNull같이 정해진 annotation일 때
+            return true;
+        User user2 = userRepository.findByEmail(userModel.getEmail());
+        if (user2 != null) {
+            bindingResult.rejectValue("email", null, "이미 가입된 이메일입니다.다른 이메일을 입력해주세요.");
+            return true;
+        }
+        if (userModel.getPassword().equals(userModel.getPassword2()) == false) { // 그 외 커스텀 폼일 때
+            bindingResult.rejectValue("password2", null, "두 비밀번호가 일치하지 않습니다.");
+        	System.out.println("메소드");
+            return true;
+        }
+
+        User user3 = userRepository.findByNickname(userModel.getNickname());
+        if (user3 != null) {
+            bindingResult.rejectValue("nickname", null, "이미 사용중인 닉네임입니다.다른 닉네임을 입력해주세요.");
+            return true;
+        }
+        return false;
+    }
+
 	@RequestMapping(value = "join", method = RequestMethod.POST)
-	public String join2(Model model, User user) {
+	public String join2(@Valid UserModel userModel,BindingResult bindingResult,Model model) {
+		if (hasErrors(userModel, bindingResult)) {
+			System.out.println("binding 에러!");
+			return "page/join";
+		}
 		String auth_key = new TempAuth_key().getKey(45, false);
 		SendEmailSSL es = new SendEmailSSL();
 		// if(userRepositroy.findByEmail(user.getEmail())==null
 		// &&userRepositroy.findByNickname(user.getNickname())==null) {
 		userRepository
-		.save(new User(user.getEmail(), user.getPassword(), user.getNickname(), null, auth_key, false, false));
-		es.sendEmail(user.getEmail(), auth_key); // 받는 사람 이메일
+		.save(new User(userModel.getEmail(), userModel.getPassword(), userModel.getNickname(), null, auth_key, false, false));
+		es.sendEmail(userModel.getEmail(), auth_key); // 받는 사람 이메일
 		return "redirect:joinNext";
 	}
-
 	@RequestMapping(value = "joinNext", method = RequestMethod.GET)
 	public String edit(Model model) {
 		int max = userRepository.findMaxUser_idx();
@@ -209,8 +246,8 @@ public class APIController {
 	}
 	@RequestMapping(value = "searchingSong", method = RequestMethod.GET)
 	public String searching(Model model, @RequestParam("keyword") String keyword,@RequestParam("kara_type") int kara) {
-		List<Song> list=songRepositroy.findBySingerIgnoreCaseContaining(keyword);
-		list.addAll(songRepositroy.findByTitleIgnoreCaseContaining(keyword));
+		List<Song> list=songRepository.findBySingerIgnoreCaseContaining(keyword);
+		list.addAll(songRepository.findByTitleIgnoreCaseContaining(keyword));
 		List<Song> result=new ArrayList<>();
 		for(int i=0;i<list.size();i++) {
 			if(list.get(i).getKara_type()==kara)
@@ -224,15 +261,20 @@ public class APIController {
 	@RequestMapping(value = "addSong", method = RequestMethod.GET)
 	public String addSong(Model model,@RequestParam("keyword") String keyword,@RequestParam("kara_type") int kara_type,@RequestParam("song_num") int song_num,final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
 		keyword=URLEncoder.encode(keyword, "UTF-8");
-		Song song=songRepositroy.findBySongNumAndKara_Type(song_num,kara_type);
+		Song song=songRepository.findBySongNumAndKara_Type(song_num,kara_type);
 		// Song_like s=song_like.get();
 		System.out.println("addsong");
 		User user = (User) session.getAttribute("user");
+
+		//로그인하지 않은 유저
 		if(user==null) {
 			return "redirect:/page/login";
 		}
+
 		System.out.println("song_id:"+song.getSong_id());
-		Song_like song_like=song_likeRepository.ExistBySong_id(song.getSong_id());
+
+		//유저가 해당 곡을 좋아요했는지 체크
+		Song_like song_like=song_likeRepository.findBySong_idAndUser_idx(song.getSong_id(), user.getUser_idx());
 		if(song_like==null) {
 			song_likeRepository.save(new Song_like(song,user,new Date()));
 		}
@@ -244,6 +286,70 @@ public class APIController {
 			out.flush();
 		}
 		return "redirect:/page/searchingSong?keyword="+keyword+"&kara_type="+kara_type;
+	}
+
+	//차트에서 저장
+	@RequestMapping(value = "addSong2", method = RequestMethod.GET)
+	public String addSong2(Model model, @RequestParam("kara_type") int kara_type, @RequestParam("song_id") int song_id, final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		User user = (User) session.getAttribute("user");
+
+		Song song=songRepository.findById(song_id).get();
+		// Song_like s=song_like.get();
+		System.out.println("add song from chartboard");
+
+		//로그인하지 않은 유저
+		if(user==null) {
+			return "redirect:/page/login";
+		}
+
+		System.out.println("song_id:"+song.getSong_id());
+
+		//유저가 해당 곡을 좋아요했는지 체크
+		Song_like song_like=song_likeRepository.findBySong_idAndUser_idx(song.getSong_id(), user.getUser_idx());
+		if(song_like==null) {
+			song_likeRepository.save(new Song_like(song,user,new Date()));
+		}
+		else {
+			System.out.println("이미있는곡");
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('이미 추가된 곡입니다.');history.go(-1);</script>");
+			out.flush();
+		}
+		return "redirect:/page/chartBoard?kara_type="+kara_type;
+	}
+
+	//유저페이지에서 저장
+	@RequestMapping(value = "addSong3", method = RequestMethod.GET)
+	public String addSong3(Model model, @RequestParam("user_idx") int user_idx, @RequestParam("kara_type") int kara_type, @RequestParam("song_id") int song_id, @RequestParam("sort") int sort, final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		User user = (User) session.getAttribute("user");
+
+		Song song=songRepository.findById(song_id).get();
+		// Song_like s=song_like.get();
+		System.out.println("add song from userpage");
+
+		//로그인하지 않은 유저
+		if(user==null) {
+			return "redirect:/page/login";
+		}
+
+		System.out.println("song_id:"+song.getSong_id());
+
+		//유저가 해당 곡을 좋아요했는지 체크
+		Song_like song_like=song_likeRepository.findBySong_idAndUser_idx(song.getSong_id(), user.getUser_idx());
+		if(song_like==null) {
+			song_likeRepository.save(new Song_like(song,user,new Date()));
+		}
+		else {
+			System.out.println("이미있는곡");
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('이미 추가된 곡입니다.');history.go(-1);</script>");
+			out.flush();
+		}
+		return "redirect:/page/user?user_idx="+user_idx+"&kara_type="+kara_type+"&sort="+sort;
 	}
 
 	@RequestMapping(value = "deleteSong", method = RequestMethod.GET)
@@ -371,6 +477,15 @@ public class APIController {
 		model.addAttribute("u",user); // 로그인한 자신이 아니라  해당 유저페이지의 유저
 		model.addAttribute("kara",kara_type);
 		model.addAttribute("sort",sort);
+
+		int count=postRepository.countUserPost(user_idx);
+		int count2=commentRepository.countUserComment(user_idx);
+		int count3=post_likeRepository.likeNumByUser(user_idx);
+
+		model.addAttribute("count", count);
+		model.addAttribute("countComment", count2);
+		model.addAttribute("countLike", count3);
+
 		System.out.println("유저페이지~");
 		return "page/user";
 	}
@@ -419,14 +534,68 @@ public class APIController {
 		return "page/notice";
 	}
 
-	@RequestMapping(value = "chartBoard", method = RequestMethod.GET)
-	public String chartBoard() {
-		return "page/chartBoard";
+	//인기글 게시판
+	@RequestMapping(value = "bestBoard", method = RequestMethod.GET)
+	public String bestBoard(Model model, @RequestParam("pg") int pg) {
+		//List<Board> board=boardRepository.findAll();
+		List<Post> posts=postRepository.findAll();
+		List<Post> bestPosts=new ArrayList<>();
+
+		for (int i=0;i<posts.size();i++) {
+			Post p=posts.get(i);
+			int likenum=post_likeRepository.findPost_like_num(p.getPost_id());
+			if(likenum>=5) {
+				bestPosts.add(p);
+				System.out.println("베스트게시글: "+p.getTitle());
+			}
+		}
+
+		HashMap<Integer, Integer> likes = new HashMap<Integer, Integer>();
+		for(int i=0;i<bestPosts.size();i++) {
+			likes.put(bestPosts.get(i).getPost_id(),post_likeRepository.findPost_like_num(bestPosts.get(i).getPost_id()));
+		}
+
+		Collections.sort(bestPosts);
+
+		model.addAttribute("pg",pg);
+		model.addAttribute("likes",likes);
+		model.addAttribute("posts", bestPosts);
+
+		return "page/bestBoard";
 	}
 
-	@RequestMapping(value = "bestBoard", method = RequestMethod.GET)
-	public String bestBoard(Model model) {
-		return "page/bestBoard";
+	//인기차트
+	@RequestMapping(value = "chartBoard", method = RequestMethod.GET)
+	public String chartBoard(Model model, @RequestParam("kara_type") int kara_type, final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException{
+		List<Rank_KY> rank1=rank_KYRepository.findAll();
+		List<Rank_TJ> rank2=rank_TJRepository.findAll();
+
+		//User user = (User) session.getAttribute("user");
+
+		System.out.println("현재 인기차트에 등록된 금영 인기곡의 수 "+rank1.size());
+		for(int i=0;i<rank1.size();i++) {
+			System.out.println((i+1)+"위 "+rank1.get(i).getTitle()+"의 추천수: "+rank1.get(i).getLikenum());
+		}
+
+		System.out.println("현재 인기차트에 등록된 태진 인기곡의 수 "+rank2.size());
+		for(int i=0;i<rank2.size();i++) {
+			System.out.println((i+1)+"위 "+rank2.get(i).getTitle()+"의 추천수: "+rank2.get(i).getLikenum());
+		}
+
+		model.addAttribute("kara_type", kara_type);
+
+		if(kara_type==0)
+			model.addAttribute("rank", rank1);
+		else if(kara_type==1)
+			model.addAttribute("rank", rank2);
+		else {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('잘못된 접근'); location.href='chartBoard?kara_type=0';</script>");
+			out.flush();
+		}
+
+		return "page/chartBoard";
 	}
 
 	@RequestMapping(value="freeBoard", method=RequestMethod.GET)
@@ -1057,6 +1226,72 @@ public class APIController {
 		System.out.println(uploadFile);
 		System.out.println("마지막");
 		return "redirect:/page/post/"+p.getPost_id();
+	}
+
+	//유저가 쓴 글 보기
+	@RequestMapping(value="userPost", method=RequestMethod.GET)
+	public String userPost(Model model,@RequestParam("user_idx") int user_idx, final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+		User log_in = (User) session.getAttribute("user");
+		User pagewowner=userRepository.findById(user_idx).get();
+		List<Post> user_post=postRepository.findUserPost(user_idx);
+
+		Collections.sort(user_post);
+
+		HashMap<Integer,Integer> likes=new HashMap<>();
+		for(int i=0;i<user_post.size();i++) {
+			likes.put(user_post.get(i).getPost_id(),post_likeRepository.findPost_like_num(user_post.get(i).getPost_id()));
+		}
+
+		model.addAttribute("log_in", log_in);
+		model.addAttribute("pagewowner", pagewowner);
+		model.addAttribute("user_post", user_post);
+		model.addAttribute("likes", likes);
+
+		return "page/userPost";
+	}
+
+	//유저가 쓴 댓글 보기
+	@RequestMapping(value="userComment", method=RequestMethod.GET)
+	public String userComment(Model model,@RequestParam("user_idx") int user_idx, final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+		User log_in = (User) session.getAttribute("user");
+		User pagewowner=userRepository.findById(user_idx).get();
+		List<Comment> user_comment=commentRepository.findUserComment(user_idx);
+
+		Collections.sort(user_comment);
+
+		HashMap<Integer,Integer> likes=new HashMap<>();
+		for(int i=0;i<user_comment.size();i++) {
+			likes.put(user_comment.get(i).getComment_id(),comment_likeRepository.like_count(user_comment.get(i).getComment_id()));
+		}
+
+		model.addAttribute("log_in", log_in);
+		model.addAttribute("pagewowner", pagewowner);
+		model.addAttribute("user_comment", user_comment);
+		model.addAttribute("likes", likes);
+
+		return "page/userComment";
+	}
+
+	//좋아요 한 글 보기
+	@RequestMapping(value="recommendedPost", method=RequestMethod.GET)
+	public String recommendedPost(Model model,@RequestParam("user_idx") int user_idx, final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+		User log_in = (User) session.getAttribute("user");
+		User pagewowner=userRepository.findById(user_idx).get();
+		List<Post_like> user_recommend=post_likeRepository.findLikeByUserIdx(user_idx);
+
+		HashMap<Integer,Integer> likes=new HashMap<>();
+		for(int i=0;i<user_recommend.size();i++) {
+			likes.put(user_recommend.get(i).getPost().getPost_id(),post_likeRepository.findPost_like_num(user_recommend.get(i).getPost().getPost_id()));
+		}
+
+		Collections.sort(user_recommend);
+
+		model.addAttribute("log_in", log_in);
+		model.addAttribute("pagewowner", pagewowner);
+		model.addAttribute("like", user_recommend);
+		model.addAttribute("likenum", likes);
+
+		return "page/recommendedPost";
 	}
 
 

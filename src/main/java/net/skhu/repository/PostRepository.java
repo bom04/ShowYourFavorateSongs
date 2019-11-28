@@ -22,12 +22,21 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 	@Query(value="update Post p set p.title=:title,p.content=:content where post_id=:post_id",nativeQuery=true)
 	void updateByPost_id(@RequestParam("title") String title,@RequestParam("content") String content, @RequestParam("post_id") int post_id);
 
+	//검색
 	@Query("select p from Post p where p.user.nickname like concat('%',:nickname,'%') OR p.title like concat('%',:title,'%')")   //전체검색
 	List<Post> findPostsByNicknameOrTitle(String nickname, String title);
 	
-	@Query("select p from Post p where p.user.nickname like concat('%',:nickname,'%')")   //닉네임검색
+	@Query("select p from Post p where p.user.nickname like concat('%',:nickname,'%')")   //작성자 닉네임으로 검색
 	List<Post> findPostsByNickname(String nickname);
 	
-	@Query("select p from Post p where p.title like concat('%',:title,'%')")   //제목검색
+	@Query("select p from Post p where p.title like concat('%',:title,'%')")   //제목으로 검색
 	List<Post> findPostsByTitle(String title);
+	
+	//유저 페이지: 포스트
+	@Query("select p from Post p where p.user.user_idx=:user_idx")   //유저가 쓴 글 찾기
+	List<Post> findUserPost(int user_idx);
+	
+	@Query("select count(p) from Post p where p.user.user_idx=:user_idx")
+	int countUserPost(int user_idx);
+
 }

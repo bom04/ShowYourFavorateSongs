@@ -13,6 +13,10 @@ import net.skhu.domain.Song_like;
 public interface Song_likeRepository extends JpaRepository<Song_like,Integer>{
 	@Query("select s from Song_like s where s.song.song_id=:song_id")
 	Song_like ExistBySong_id(@RequestParam("song_id") int song_id);
+	
+	//song_id와 유저 idx로 찾기
+	@Query("select s from Song_like s where s.song.song_id=:song_id and s.user.user_idx=:user_idx")
+	Song_like findBySong_idAndUser_idx(@RequestParam("song_id") int song_id, @RequestParam("user_idx") int user_idx);
 
 	@Query("select s from Song_like s where s.user.user_idx=:user_idx and s.song.kara_type=:kara_type")
 	List<Song_like> findByUser_idxAndKara_type(@RequestParam("user_idx") int user_idx,@RequestParam("kara_type") int kara_type);
@@ -21,4 +25,8 @@ public interface Song_likeRepository extends JpaRepository<Song_like,Integer>{
 	@Modifying
 	@Query("DELETE FROM Song_like s WHERE s.song.song_id=:song_id and s.user.user_idx=:user_idx")
 	void deleteSong(@RequestParam("song_id") int song_id,@RequestParam("user_idx") int user_idx);
+	
+	@Query("select count(s) from Song_like s where s.song.song_id=:song_id")
+	int countsongLike(@RequestParam("song_id") int song_id);
+	
 }

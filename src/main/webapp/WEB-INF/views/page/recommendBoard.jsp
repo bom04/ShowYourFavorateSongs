@@ -48,9 +48,10 @@
 						<thead>
 							<tr>
 								<th>번호</th>
-								<th>제목</th>
-								<th>작성자</th>
-								<th>날짜</th>
+								<th colspan=2>제목</th>
+								<th colspan=2>작성자</th>
+								<th colspan=2>날짜</th>
+								<th>댓글</th>
 								<th>조회</th>
 								<th>추천</th>
 							</tr>
@@ -75,16 +76,17 @@
 
 									<tr>
 										<td><c:out value="${num}" /></td>
-										<td><a href="post/${post.post_id}"
-											style="text-decoration: none; font-weight: bold; color: grey">${post.title}[${commentAndReplyNum}]
+										<td colspan=2><a href="post/${post.post_id}"
+											style="text-decoration: none; font-weight: bold; color: grey">${post.title}
 										</a></td>
 										<c:set var="theString" value="${post.user.nickname}" />
-										<td><c:if test="${fn:contains(theString,'관리자')}">${post.user.nickname}</c:if>
+										<td colspan=2><c:if test="${fn:contains(theString,'관리자')}">${post.user.nickname}</c:if>
 											<c:if test="${fn:indexOf(theString,'관리자')==-1}">
 												<a href="user?user_idx=${post.user.user_idx}&kara_type=0&sort=0"
 													style="text-decoration: none; font-weight: bold; color: grey">${post.user.nickname}</a>
 											</c:if></td>
-										<td>${post.date}</td>
+										<td colspan=2><fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm"/></td>
+										<td>${commentAndReplyNum}</td>
 										<td>${post.view}</td>
 										<td><c:choose>
 												<c:when test="${map_like.containsKey(post.post_id) eq true}">

@@ -34,7 +34,12 @@
 			<div id="content">
 				<div
 					style="text-align: center; padding-top: 200px; padding-bottom: 20px;">
-					<h1 style="font-size: 20pt">${u.nickname}님의개인페이지</h1>
+					<c:if test="${me.user_idx==u.user_idx}">
+						<h1 style="font-size: 20pt">마이 페이지</h1>
+					</c:if>
+					<c:if test="${me.user_idx!=u.user_idx}">
+						<h1 style="font-size: 20pt">${u.nickname}님의 개인페이지</h1>
+					</c:if>
 				</div>
 
 				<hr
@@ -99,11 +104,11 @@
 									</c:choose>
 							</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="userPost.html" style="text-decoration: none;">포스트 0</a>
+								href="/page/userPost?user_idx=${u.user_idx}" style="text-decoration: none;">포스트 ${count}</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="userReply.html" style="text-decoration: none;">댓글 2</a>
+								href="/page/userComment?user_idx=${u.user_idx}" style="text-decoration: none;">댓글 ${countComment}</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="userLike.html" style="text-decoration: none;">좋아요 1</a>
+								href="/page/recommendedPost?user_idx=${u.user_idx}" style="text-decoration: none;">좋아요 ${countLike}</a>
 							</span>
 
 						</div>
@@ -115,7 +120,7 @@
 				</div>
 
 				<div style="padding-bottom: 10px; text-align: center;">
-					<h1 style="font-size: 15pt">${u.nickname}님의애창곡목록</h1>
+					<h1 style="font-size: 15pt">${u.nickname}님의 애창곡 목록</h1>
 				</div>
 				<hr
 					style="margin-bottom: -40px; border: 0; height: 1px; background: #E6E6E6; clear: both;">
@@ -152,7 +157,7 @@
 							<thead>
 								<tr>
 									<th style="font-weight: bold; font-size: 12pt;">번호</th>
-									<th style="font-weight: bold; font-size: 12pt;">곡명</th>
+									<th colspan=2 style="font-weight: bold; font-size: 12pt;">곡명</th>
 									<th style="font-weight: bold; font-size: 12pt;">가수</th>
 								</tr>
 							</thead>
@@ -160,10 +165,14 @@
 							<tbody>
 								<c:forEach var="song" items="${songs}" varStatus="status">
 									<tr
-										<c:if test="${u.user_idx eq user.user_idx}"> song-delete="${user.user_idx} ${kara} ${sort} ${song.song.song_id}"</c:if>
+										<c:choose>
+											<c:when test="${u.user_idx eq user.user_idx}"> song-delete="${user.user_idx} ${kara} ${sort} ${song.song.song_id}"</c:when>
+											<c:otherwise>song-add-userpage="${user.user_idx} ${kara} ${song.song.song_id} ${sort}"</c:otherwise>
+										</c:choose>
 										style="cursor: pointer">
+										
 										<td>${song.song.song_num}</td>
-										<td>${song.song.title}</td>
+										<td colspan=2>${song.song.title}</td>
 										<td>${song.song.singer}</td>
 									</tr>
 								</c:forEach>
@@ -176,9 +185,6 @@
 
 
 				<!-- Button trigger modal -->
-				<button type="button" class="btn btn-primary btn-lg"
-					data-toggle="modal" data-target="#myModal">Launch demo
-					modal</button>
 
 				<div id="modalLayer">
 					<div class="modalContent">
