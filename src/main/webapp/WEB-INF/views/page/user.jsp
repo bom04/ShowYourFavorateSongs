@@ -167,7 +167,7 @@
 									<tr
 										<c:choose>
 											<c:when test="${u.user_idx eq user.user_idx}"> song-delete="${user.user_idx} ${kara} ${sort} ${song.song.song_id}"</c:when>
-											<c:otherwise>song-add-userpage="${user.user_idx} ${kara} ${song.song.song_id} ${sort}"</c:otherwise>
+											<c:otherwise>song-add-userpage="${user.user_idx} ${kara} ${song.song.song_id} ${sort} ${u.user_idx}"</c:otherwise>
 										</c:choose>
 										style="cursor: pointer">
 										

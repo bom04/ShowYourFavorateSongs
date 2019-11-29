@@ -34,7 +34,8 @@
 						style="padding-top: 200px; padding-bottom: 100px;">
 						<!--곡 검색-->
 						<div style="margin-top: 30px;">
-							<form action="/page/searchingSong/0" method="get"> <!-- 0이면 ky,1이면 tj -->
+							<form action="/page/searchingSong/0" method="get">
+								<!-- 0이면 ky,1이면 tj -->
 								<input type="text" class="search-song" name="keyword"
 									placeholder="곡 제목 혹은 가수 검색" style="text-align: center;">
 								<div style="text-align: center; margin-top: 30px;">
@@ -58,9 +59,18 @@
 								<h2>-</h2>
 								<p style="color: #151515; font-weight: 400;">나만의 애창곡 리스트를 통해
 									더 쉽고 빠르게 노래방을 즐기세요</p>
-								<button type="button" class="btn btn-primary"
-									style="margin-top: 40px; width: 120px;"
-									onclick="location.href='login'">바로 가기</button>
+								<c:choose>
+									<c:when test="${empty user }">
+										<button type="button" class="btn btn-primary"
+											style="margin-top: 40px; width: 120px;"
+											onclick="location.href='/page/login'">바로 가기</button>
+									</c:when>
+									<c:otherwise>
+										<button type="button" class="btn btn-primary"
+											style="margin-top: 40px; width: 120px;"
+											onclick="location.href='/page/user?user_idx=${user.user_idx}&kara_type=0&sort=0'">바로 가기</button>
+									</c:otherwise>
+								</c:choose>
 							</div>
 							<div
 								style="width: 333px; height: 350px; background: #D8D8D8; margin-right: 21px; padding: 60px 30px; text-align: center;">
@@ -70,7 +80,7 @@
 									읽어보세요</p>
 								<button type="button" class="btn btn-primary"
 									style="margin-top: 40px; width: 120px;"
-									onclick="location.href='bestBoard'">바로 가기</button>
+									onclick="location.href='/page/bestBoard?pg=1'">바로 가기</button>
 							</div>
 							<div
 								style="width: 333px; height: 350px; background: #D8D8D8; padding: 60px 30px; text-align: center;">

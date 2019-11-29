@@ -353,7 +353,7 @@ public class APIController {
 	@RequestMapping(value = "addSong3", method = RequestMethod.GET)
 	public String addSong3(Model model, @RequestParam("user_idx") int user_idx,
 			@RequestParam("kara_type") int kara_type, @RequestParam("song_id") int song_id,
-			@RequestParam("sort") int sort, final HttpSession session, HttpServletRequest request,
+			@RequestParam("sort") int sort,@RequestParam("other_idx") int other_idx, final HttpSession session, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
 		User user = (User) session.getAttribute("user");
@@ -380,7 +380,7 @@ public class APIController {
 			out.println("<script>alert('이미 추가된 곡입니다.');history.go(-1);</script>");
 			out.flush();
 		}
-		return "redirect:/page/user?user_idx=" + user_idx + "&kara_type=" + kara_type + "&sort=" + sort;
+		return "redirect:/page/user?user_idx=" + other_idx + "&kara_type=" + kara_type + "&sort=" + sort;
 	}
 
 	@RequestMapping(value = "deleteSong", method = RequestMethod.GET)
