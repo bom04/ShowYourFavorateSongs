@@ -290,11 +290,10 @@
 																onclick="location.href='/page/login'">등록</button>
 														</c:when>
 														<c:otherwise>
-															<form method="post" onsubmit="return check2()"
+															<form method="post" 
 																action="/page/post/${post.post_id}/comment/${comments.comment_id}/reply">
 																<textarea id="cont2" name="content" cols="30" rows="10"
 																	class="txar" placeholder=""></textarea>
-
 																<button type="submit" class="btn btn-primary"
 																	style="float: right; margin-right: 10px;">등록</button>
 															</form>
@@ -331,13 +330,7 @@
 				}
 				return true;	
 			}
-			function check2() {
-				if($('#cont2').val()=='') {
-					alert('내용은 필수 요소입니다@');
-					return false;
-				}
-				return true;	
-			}
+
 		</script>
 
 						<!--댓글 입력 폼-->

@@ -56,7 +56,6 @@ import net.skhu.domain.Song;
 import net.skhu.domain.Song_like;
 import net.skhu.domain.User;
 import net.skhu.model.ChangePwModel;
-import net.skhu.model.CommentModel;
 import net.skhu.model.FindPwModel;
 import net.skhu.model.LoginUserModel;
 import net.skhu.model.ProfileUserModel;
@@ -1015,13 +1014,6 @@ public class APIController {
 		return "redirect:/page/post/"+id;
 	}
 
-	public boolean hasErrors7(CommentModel commentModel, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {// @notEmpty,@notNull같이 정해진 annotation일 때
-			System.out.println("처음꺼");
-			return true;
-		}
-		return false;
-	}
 
 	//댓글입력
 	@RequestMapping(value="post/{id}/comment", method=RequestMethod.POST)
@@ -1046,7 +1038,13 @@ public class APIController {
 
 	@RequestMapping(value="post/{id}/comment/{comment_id}/reply", method = RequestMethod.POST)
 	public String createReply2(Model model,@PathVariable("id") int id,@PathVariable("comment_id") int comment_id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Reply reply) throws IOException {
-
+		if(reply.getContent().length()==0) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('내용은 필수요소입니다.');history.go(-1);</script>");
+			out.flush();
+			return "redirect:/page/post/"+id;
+		}
 		System.out.println("대댓글 입력됨");
 		System.out.println(reply.getContent());
 
@@ -1231,225 +1229,225 @@ public class APIController {
 
 	}
 
-	  //글 수정 메소드   (수정중)
-	   @RequestMapping(value = "postModify", method = RequestMethod.POST)
-	   public String postModify2(@RequestParam("post_id") int post_id, final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+	//글 수정 메소드   (수정중)
+	@RequestMapping(value = "postModify", method = RequestMethod.POST)
+	public String postModify2(@RequestParam("post_id") int post_id, final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-	      int maxSize  = 1024*1024*10;
+		int maxSize  = 1024*1024*10;
 
-	      // 웹서버 컨테이너 경로
-	      String root = request.getSession().getServletContext().getRealPath("/");
-	      System.out.println("root:"+root);
-	      // 파일 저장 경로(ex : /home/tour/web/ROOT/upload)
-	      String savePath = root + "upload/";
+		// 웹서버 컨테이너 경로
+		String root = request.getSession().getServletContext().getRealPath("/");
+		System.out.println("root:"+root);
+		// 파일 저장 경로(ex : /home/tour/web/ROOT/upload)
+		String savePath = root + "upload/";
 
-	      // 업로드 파일명
-	      String uploadFile = "";
+		// 업로드 파일명
+		String uploadFile = "";
 
-	      // 실제 저장할 파일명
-	      String newFileName = "";
+		// 실제 저장할 파일명
+		String newFileName = "";
 
-	      int read = 0;
-	      byte[] buf = new byte[1024];
-	      FileInputStream fin = null;
-	      FileOutputStream fout = null;
-	      long currentTime = System.currentTimeMillis();
-	      SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
-	      String title="";
-	      String content="";
-	      int user_idx=0;
-	      int board_id=0;
-	      User user = (User) session.getAttribute("user");
-	      if(user==null)
-	         System.out.println("nulllll");
-	      else
-	         System.out.println("id입니다!!!:"+user.getUser_idx());
-	      Board board=null;
-	      try{
-	         MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8", new DefaultFileRenamePolicy());
-	         // 전송받은 parameter의 한글깨짐 방지
-	         title = multi.getParameter("title");
-	         content = multi.getParameter("content");
-	         System.out.println("title:"+title);
+		int read = 0;
+		byte[] buf = new byte[1024];
+		FileInputStream fin = null;
+		FileOutputStream fout = null;
+		long currentTime = System.currentTimeMillis();
+		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String title="";
+		String content="";
+		int user_idx=0;
+		int board_id=0;
+		User user = (User) session.getAttribute("user");
+		if(user==null)
+			System.out.println("nulllll");
+		else
+			System.out.println("id입니다!!!:"+user.getUser_idx());
+		Board board=null;
+		try{
+			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8", new DefaultFileRenamePolicy());
+			// 전송받은 parameter의 한글깨짐 방지
+			title = multi.getParameter("title");
+			content = multi.getParameter("content");
+			System.out.println("title:"+title);
 
-	         String[] check=multi.getParameterValues("check");
-	         if(check!=null) {
-	            for(int i=0;i<check.length;i++) {
-	               int file_id=Integer.parseInt(check[i]);
-	               File2 file=fileRepository.findById(file_id).get();
-	               System.out.println("삭제 체트된 파일명 "+file.getFile_name());
-	               fileRepository.deleteById(file_id);  //db에서 파일 삭제
-	               try {
-	                  Files.delete(getFilePath(file));  //서버에서 파일 삭제
-	               } catch (IOException e) {
-	                  e.printStackTrace();
-	               }
-	            }
-	         }
+			String[] check=multi.getParameterValues("check");
+			if(check!=null) {
+				for(int i=0;i<check.length;i++) {
+					int file_id=Integer.parseInt(check[i]);
+					File2 file=fileRepository.findById(file_id).get();
+					System.out.println("삭제 체트된 파일명 "+file.getFile_name());
+					fileRepository.deleteById(file_id);  //db에서 파일 삭제
+					try {
+						Files.delete(getFilePath(file));  //서버에서 파일 삭제
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 
-//	         String[] checked_files=request.getParameterValues("check");
-//	         for(int i=0;i<checked_files.length;i++) {
-//	            System.out.println("----체크된 파일:"+checked_files[i]);
-//	         }
+			//	         String[] checked_files=request.getParameterValues("check");
+			//	         for(int i=0;i<checked_files.length;i++) {
+			//	            System.out.println("----체크된 파일:"+checked_files[i]);
+			//	         }
 
-	         //         user_idx = Integer.parseInt(multi.getParameter("user_idx"));
-	         System.out.println("user_idx:"+user_idx);
+			//         user_idx = Integer.parseInt(multi.getParameter("user_idx"));
+			System.out.println("user_idx:"+user_idx);
 
-	         //         Optional<User> optinalEntity = userRepository.findById(user_idx);
-	         //         user = optinalEntity.get();
+			//         Optional<User> optinalEntity = userRepository.findById(user_idx);
+			//         user = optinalEntity.get();
 
-	         //         board_id = Integer.parseInt(multi.getParameter("board_id"));
-	         //         Optional<Board> optinalEntity2 = boardRepository.findById(board_id);
-	         //         board = optinalEntity2.get();
+			//         board_id = Integer.parseInt(multi.getParameter("board_id"));
+			//         Optional<Board> optinalEntity2 = boardRepository.findById(board_id);
+			//         board = optinalEntity2.get();
 
-	         //title = new String(title.getBytes("8859_1"), "UTF-8");
+			//title = new String(title.getBytes("8859_1"), "UTF-8");
 
-	         //         System.out.println("board_id:"+board_id);
-	         Enumeration<?> files = multi.getFileNames();
+			//         System.out.println("board_id:"+board_id);
+			Enumeration<?> files = multi.getFileNames();
 
-	         while(files.hasMoreElements()){
-	            String file1 = (String)files.nextElement();
+			while(files.hasMoreElements()){
+				String file1 = (String)files.nextElement();
 
-	            uploadFile = multi.getOriginalFileName(file1);
-	            newFileName = multi.getFilesystemName(file1);
+				uploadFile = multi.getOriginalFileName(file1);
+				newFileName = multi.getFilesystemName(file1);
 
-	            File file = multi.getFile(file1);
-	            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!추가된 이미지: "+uploadFile);
-	         }
+				File file = multi.getFile(file1);
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!추가된 이미지: "+uploadFile);
+			}
 
-	      } catch(Exception e){
-	         e.printStackTrace();
-	      }
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 
-	      postRepository.updateByPost_id(title,content,post_id);
-	      //제목과 내용은 수정되는데 파일은 수정이 안되고 처음에 올린 그대로 올라감
-	      if(uploadFile!=null) {
-	         File2 file=new File2();
-	         file.setFile_name(uploadFile);
-	         file.setPost(postRepository.findById(post_id).get());
-	         fileRepository.save(file);
-	      }
-	      if(uploadFile==null)
-	         System.out.println("저장된 파일이 없어요");
+		postRepository.updateByPost_id(title,content,post_id);
+		//제목과 내용은 수정되는데 파일은 수정이 안되고 처음에 올린 그대로 올라감
+		if(uploadFile!=null) {
+			File2 file=new File2();
+			file.setFile_name(uploadFile);
+			file.setPost(postRepository.findById(post_id).get());
+			fileRepository.save(file);
+		}
+		if(uploadFile==null)
+			System.out.println("저장된 파일이 없어요");
 
-	      System.out.println("수정완료");
+		System.out.println("수정완료");
 
 
 
-	      //return "redirect:/page/post/"+p.getPost_id();
-	      return "redirect:/page/post/"+post_id;
+		//return "redirect:/page/post/"+p.getPost_id();
+		return "redirect:/page/post/"+post_id;
 
-	   }
+	}
 
 	// 글 추가 메소드
-		@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.GET)
-		public String postWrite(@PathVariable("board_id") int board_id, Model model, final HttpSession session,
-				HttpServletRequest request, HttpServletResponse response) {
-			User user = (User) session.getAttribute("user");
-			Post post = new Post();
+	@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.GET)
+	public String postWrite(@PathVariable("board_id") int board_id, Model model, final HttpSession session,
+			HttpServletRequest request, HttpServletResponse response) {
+		User user = (User) session.getAttribute("user");
+		Post post = new Post();
+		File2 file = new File2();
+
+		List<File2> filelist = null;
+
+		List<Board> boards = boardRepository.findAll();
+		List<User> users = userRepository.findAll();
+
+		model.addAttribute("selectBoard", board_id);
+		model.addAttribute("post", post);
+		model.addAttribute("boards", boards);
+		model.addAttribute("users", users);
+		model.addAttribute("files", file);
+		model.addAttribute("filelist", filelist);
+
+		return "page/postWrite";
+	}
+
+	@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.POST)
+	public String postWrite(final HttpSession session, HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		System.out.println("postWrite");
+		// 10Mbyte 제한
+		// ServletContext ctx = request.getServletContext();
+		// 10Mbyte 제한
+		int maxSize = 1024 * 1024 * 10;
+
+		// 웹서버 컨테이너 경로
+		String root = request.getSession().getServletContext().getRealPath("/");
+		System.out.println("root:" + root);
+		// 파일 저장 경로(ex : /home/tour/web/ROOT/upload)
+		String savePath = root + "upload/";
+
+		// 업로드 파일명
+		String uploadFile = "";
+
+		// 실제 저장할 파일명
+		String newFileName = "";
+
+		int read = 0;
+		byte[] buf = new byte[1024];
+		FileInputStream fin = null;
+		FileOutputStream fout = null;
+		long currentTime = System.currentTimeMillis();
+		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String title = "";
+		String content = "";
+		int user_idx = 0;
+		int board_id = 0;
+		User user = (User) session.getAttribute("user");
+		if (user == null)
+			System.out.println("nulllll");
+		else
+			System.out.println("id입니다!!!:" + user.getUser_idx());
+		Board board = null;
+		try {
+			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8",
+					new DefaultFileRenamePolicy());
+			// 전송받은 parameter의 한글깨짐 방지
+			title = multi.getParameter("title");
+			content = multi.getParameter("content");
+			System.out.println("title:" + title);
+
+			// user_idx = Integer.parseInt(multi.getParameter("user_idx"));
+			System.out.println("user_idx:" + user_idx);
+
+			// Optional<User> optinalEntity = userRepository.findById(user_idx);
+			// user = optinalEntity.get();
+
+			board_id = Integer.parseInt(multi.getParameter("board_id"));
+			Optional<Board> optinalEntity2 = boardRepository.findById(board_id);
+			board = optinalEntity2.get();
+
+			// title = new String(title.getBytes("8859_1"), "UTF-8");
+
+			// System.out.println("board_id:"+board_id);
+			Enumeration files = multi.getFileNames();
+
+			while (files.hasMoreElements()) {
+				String file1 = (String) files.nextElement();
+
+				uploadFile = multi.getOriginalFileName(file1);
+				newFileName = multi.getFilesystemName(file1);
+
+				File file = multi.getFile(file1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Post p = postRepository.save(new Post(user, board, title, content, 0, new Date()));
+
+		if (uploadFile != null) {
 			File2 file = new File2();
-
-			List<File2> filelist = null;
-
-			List<Board> boards = boardRepository.findAll();
-			List<User> users = userRepository.findAll();
-
-			model.addAttribute("selectBoard", board_id);
-			model.addAttribute("post", post);
-			model.addAttribute("boards", boards);
-			model.addAttribute("users", users);
-			model.addAttribute("files", file);
-			model.addAttribute("filelist", filelist);
-
-			return "page/postWrite";
+			file.setFile_name(uploadFile);
+			file.setPost(p);
+			fileRepository.save(file);
 		}
-
-		@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.POST)
-		public String postWrite(final HttpSession session, HttpServletRequest request, HttpServletResponse response)
-				throws IOException {
-			System.out.println("postWrite");
-			// 10Mbyte 제한
-			// ServletContext ctx = request.getServletContext();
-			// 10Mbyte 제한
-			int maxSize = 1024 * 1024 * 10;
-
-			// 웹서버 컨테이너 경로
-			String root = request.getSession().getServletContext().getRealPath("/");
-			System.out.println("root:" + root);
-			// 파일 저장 경로(ex : /home/tour/web/ROOT/upload)
-			String savePath = root + "upload/";
-
-			// 업로드 파일명
-			String uploadFile = "";
-
-			// 실제 저장할 파일명
-			String newFileName = "";
-
-			int read = 0;
-			byte[] buf = new byte[1024];
-			FileInputStream fin = null;
-			FileOutputStream fout = null;
-			long currentTime = System.currentTimeMillis();
-			SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
-			String title = "";
-			String content = "";
-			int user_idx = 0;
-			int board_id = 0;
-			User user = (User) session.getAttribute("user");
-			if (user == null)
-				System.out.println("nulllll");
-			else
-				System.out.println("id입니다!!!:" + user.getUser_idx());
-			Board board = null;
-			try {
-				MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8",
-						new DefaultFileRenamePolicy());
-				// 전송받은 parameter의 한글깨짐 방지
-				title = multi.getParameter("title");
-				content = multi.getParameter("content");
-				System.out.println("title:" + title);
-
-				// user_idx = Integer.parseInt(multi.getParameter("user_idx"));
-				System.out.println("user_idx:" + user_idx);
-
-				// Optional<User> optinalEntity = userRepository.findById(user_idx);
-				// user = optinalEntity.get();
-
-				board_id = Integer.parseInt(multi.getParameter("board_id"));
-				Optional<Board> optinalEntity2 = boardRepository.findById(board_id);
-				board = optinalEntity2.get();
-
-				// title = new String(title.getBytes("8859_1"), "UTF-8");
-
-				// System.out.println("board_id:"+board_id);
-				Enumeration files = multi.getFileNames();
-
-				while (files.hasMoreElements()) {
-					String file1 = (String) files.nextElement();
-
-					uploadFile = multi.getOriginalFileName(file1);
-					newFileName = multi.getFilesystemName(file1);
-
-					File file = multi.getFile(file1);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			Post p = postRepository.save(new Post(user, board, title, content, 0, new Date()));
-
-			if (uploadFile != null) {
-				File2 file = new File2();
-				file.setFile_name(uploadFile);
-				file.setPost(p);
-				fileRepository.save(file);
-			}
-			System.out.println(newFileName);
-			System.out.println(uploadFile);
-			System.out.println("마지막");
-			return "redirect:/page/post/" + p.getPost_id();
-		}
+		System.out.println(newFileName);
+		System.out.println(uploadFile);
+		System.out.println("마지막");
+		return "redirect:/page/post/" + p.getPost_id();
+	}
 
 	//유저가 쓴 글 보기
 	@RequestMapping(value="userPost", method=RequestMethod.GET)
