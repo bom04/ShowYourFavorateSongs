@@ -55,7 +55,7 @@
 								</div>
 								<div class="form-group">
 									<label>비밀번호</label>
-									<form:password path="password" class="form-control w200" placeholder="비밀번호를 입력하세요."/>
+									<input type="password" id="password" name="password" class="form-control w200" placeholder="비밀번호를 입력하세요."/>
 									<form:errors path="password" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>

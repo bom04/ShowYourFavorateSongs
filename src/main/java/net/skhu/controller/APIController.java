@@ -56,6 +56,7 @@ import net.skhu.domain.Song;
 import net.skhu.domain.Song_like;
 import net.skhu.domain.User;
 import net.skhu.model.ChangePwModel;
+import net.skhu.model.CommentModel;
 import net.skhu.model.FindPwModel;
 import net.skhu.model.LoginUserModel;
 import net.skhu.model.ProfileUserModel;
@@ -896,7 +897,7 @@ public class APIController {
 	}
 
 	@RequestMapping(value="post/{id}", method=RequestMethod.GET)
-	public String postId(Model model, @PathVariable("id") int id,final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+	public String postId(Model model,@PathVariable("id") int id,final HttpSession session,HttpServletRequest request, HttpServletResponse response) {
 		postRepository.updateView(id);
 		Post post= postRepository.findById(id).get();
 		List<File2> files=post.getFiles();//파일
@@ -1014,10 +1015,17 @@ public class APIController {
 		return "redirect:/page/post/"+id;
 	}
 
+	public boolean hasErrors7(CommentModel commentModel, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {// @notEmpty,@notNull같이 정해진 annotation일 때
+			System.out.println("처음꺼");
+			return true;
+		}
+		return false;
+	}
 
 	//댓글입력
-	@RequestMapping(value="post/{id}/comment", method = RequestMethod.GET)
-	public String createComment(Model model, @PathVariable("id") int id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Comment comment) throws IOException {
+	@RequestMapping(value="post/{id}/comment", method=RequestMethod.POST)
+	public String createComment2(Model model,Comment comment,@PathVariable("id") int id,final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		System.out.println("댓글 입력됨");
 		System.out.println(comment.getContent());
@@ -1025,7 +1033,7 @@ public class APIController {
 		User user = (User) session.getAttribute("user");
 		Optional<Post> post = postRepository.findById(id);
 		Post p=post.get();
-
+		comment.setContent(comment.getContent());
 		comment.setDate(new Date());
 		comment.setUser(user);
 		comment.setPost(p);
@@ -1036,15 +1044,9 @@ public class APIController {
 		return "redirect:/page/post/"+id;
 	}
 
-	//댓글입력
-	@RequestMapping(value="post/{id}/comment", method=RequestMethod.POST)
-	public String createComment2(Model model, @PathVariable("id") int id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Comment comment) throws IOException {
+	@RequestMapping(value="post/{id}/comment/{comment_id}/reply", method = RequestMethod.POST)
+	public String createReply2(Model model,@PathVariable("id") int id,@PathVariable("comment_id") int comment_id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Reply reply) throws IOException {
 
-		return "redirect:/page/post/"+id;
-	}
-
-	@RequestMapping(value="post/{id}/comment/{comment_id}/reply", method = RequestMethod.GET)
-	public String createReply(Model model, @PathVariable("id") int id,@PathVariable("comment_id") int comment_id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Reply reply) throws IOException {
 		System.out.println("대댓글 입력됨");
 		System.out.println(reply.getContent());
 
@@ -1057,12 +1059,6 @@ public class APIController {
 		reply.setComment(c);
 
 		replyRepository.save(reply);
-
-		return "redirect:/page/post/"+id;
-	}
-
-	@RequestMapping(value="post/{id}/comment/{comment_id}/reply", method = RequestMethod.POST)
-	public String createReply2(Model model, @PathVariable("id") int id,@PathVariable("comment_id") int comment_id,final HttpSession session,HttpServletRequest request, HttpServletResponse response, Reply reply) throws IOException {
 
 		return "redirect:/page/post/"+id;
 	}

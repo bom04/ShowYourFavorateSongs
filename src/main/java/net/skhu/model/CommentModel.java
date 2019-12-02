@@ -9,5 +9,5 @@ import lombok.Data;
 public class CommentModel {
     @NotEmpty(message="내용을 입력해주세요.")
     @Size(min=1, max=200, message="200자 이하이어야 합니다.")
-    String content;
+    String content22;
 }

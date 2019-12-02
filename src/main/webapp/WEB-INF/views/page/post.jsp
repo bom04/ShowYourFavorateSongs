@@ -69,7 +69,8 @@
 							</p>
 							<p class="lead" style="margin-right: 20px; float: right;">
 								<img
-									src="${pageContext.request.contextPath}/res/images/date.png" />&nbsp;<fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm"/>
+									src="${pageContext.request.contextPath}/res/images/date.png" />&nbsp;
+								<fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm" />
 							</p>
 						</div>
 
@@ -83,24 +84,16 @@
 							<!--파일-->
 
 							<c:forEach var="file" items="${files}">
-								<c:choose>
-									<c:when test="${extensions.get(file.file_id) eq 'jpg' || extensions.get(file.file_id) eq 'png' || extensions.get(file.file_id) eq 'gif' || extensions.get(file.file_id) eq 'jpeg' || extensions.get(file.file_id) eq 'bmp' || extensions.get(file.file_id) eq 'tiff'}">
-										<p style="text-align: center;">
-											<img
-												src="${pageContext.request.contextPath}/upload/${file.file_name}"
-												style="width: 700px;">
-										</p>
-									</c:when>
-									<c:otherwise></c:otherwise>
-								</c:choose>
-								
-								<br><br>
+								<p style="text-align: center;">
+									<img
+										src="${pageContext.request.contextPath}/upload/${file.file_name}"
+										style="width: 700px;">
+								</p>
 							</c:forEach>
 							<br> <br>
 						</div>
 
 						<!--추천-->
-						<c:if test="${post.board.board_id!=5}">
 						<div class="lead" style="text-align: center; margin-bottom: 80px;">
 							<c:choose>
 								<c:when test="${empty user }">
@@ -128,7 +121,6 @@
 							<div class="btn"
 								style="border: 1px solid grey; background: white; color: grey">&nbsp;${like_num}</div>
 						</div>
-						</c:if>
 
 						<c:choose>
 							<c:when test="${post.user.user_idx eq user.user_idx }">
@@ -150,26 +142,10 @@
 
 							</c:when>
 						</c:choose>
-						
-						<!--파일 다운로드-->
-						
-						<c:if test="${files.size()>0}">
-							<div style="height:20px; padding-left: 10px;">첨부 파일<div>
-							<br>
-							<c:forEach var="file" items="${files}">
-							<c:set var="ext" value="${extensions.get(file.file_id)}" />
-
-								<a href="../../upload/${file.file_name}">${file.file_name}</a>
-
-							</c:forEach>
-						</c:if>
-						
-						
 						<br> <br>
 						<hr class="my-4" style="clear: both;">
 						<!--댓글-->
 						<p class="lead-2" style="">댓글</p>
-						
 						<hr class="my-4" style="clear: both; margin-bottom: -100px">
 
 						<!--댓글 목록-->
@@ -308,16 +284,16 @@
 													<c:choose>
 														<c:when test="${empty user }">
 															<textarea name="content" cols="30" rows="10" class="txar"
-																placeholder="다른 이용자에 대한 비방, 욕설 등의 댓글은 삭제될 수 있습니다"></textarea>
+																placeholder=""></textarea>
 															<button type="submit" class="btn btn-primary"
 																style="float: right; margin-right: 10px;"
 																onclick="location.href='/page/login'">등록</button>
 														</c:when>
 														<c:otherwise>
-															<form
+															<form method="post" onsubmit="return check2()"
 																action="/page/post/${post.post_id}/comment/${comments.comment_id}/reply">
-																<textarea name="content" cols="30" rows="10"
-																	class="txar" placeholder="다른 이용자에 대한 비방, 욕설 등의 댓글은 삭제될 수 있습니다"></textarea>
+																<textarea id="cont2" name="content" cols="30" rows="10"
+																	class="txar" placeholder=""></textarea>
 
 																<button type="submit" class="btn btn-primary"
 																	style="float: right; margin-right: 10px;">등록</button>
@@ -334,7 +310,35 @@
 							</ul>
 						</div>
 
+<script type="text/javascript">
+			$(document).ready(function() {
+				$('.txar').on('keyup', function() {
 
+					if ($(this).val().length > 200) {
+
+						$(this).val($(this).val().substring(0, 200));
+
+					}
+
+				});
+
+			});
+
+			function check() {
+				if($('#context').val()=='') {
+					alert('내용은 필수 요소입니다.');
+					return false;
+				}
+				return true;	
+			}
+			function check2() {
+				if($('#cont2').val()=='') {
+					alert('내용은 필수 요소입니다@');
+					return false;
+				}
+				return true;	
+			}
+		</script>
 
 						<!--댓글 입력 폼-->
 						<div class="txar_wrap">
@@ -342,16 +346,16 @@
 								<c:choose>
 									<c:when test="${empty user }">
 										<textarea name="content" cols="30" rows="10" class="txar"
-											placeholder="다른 이용자에 대한 비방, 욕설 등의 댓글은 삭제될 수 있습니다"></textarea>
+											placeholder=""></textarea>
 
 										<button type="submit" value="" class="btn btn-primary"
 											style="float: left; width: 100%"
 											onclick="location.href='/page/login'">등록</button>
 									</c:when>
 									<c:otherwise>
-										<form action="/page/post/${post.post_id}/comment">
-											<textarea name="content" cols="30" rows="10" class="txar"
-												placeholder="다른 이용자에 대한 비방, 욕설 등의 댓글은 삭제될 수 있습니다"></textarea>
+										<form onsubmit="return check()" method="post" action="/page/post/${post.post_id}/comment">
+											<textarea id="context" name="content" cols="30" rows="10" class="txar"
+												placeholder=""></textarea>
 
 											<button type="submit" value="" class="btn btn-primary"
 												style="float: left; width: 100%">등록</button>
@@ -365,7 +369,6 @@
 					</div>
 				</div>
 		</section>
-
 		<!--푸터-->
 		<%@ include file="/WEB-INF/include/footer.jsp"%>
 
