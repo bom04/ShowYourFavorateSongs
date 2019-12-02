@@ -32,7 +32,7 @@
 				<option value="title">제목</option>
 				<option value="writer">작성자</option>
 			</select> <input name="keyword" class="form-control mr-sm-2" type="text"
-				placeholder="" style="margin-left: -3px">
+				placeholder="${keyword}" style="margin-left: -3px">
 			<button type="submit" class="btn btn-secondary my-2 my-sm-0"
 				style="height: 45px; width: 100px; margin-left: -10px; padding-top: 10px;">찾기</button>
 		</form>

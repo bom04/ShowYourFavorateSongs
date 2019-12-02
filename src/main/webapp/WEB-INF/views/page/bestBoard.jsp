@@ -26,6 +26,14 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="<c:url value='/js/common.js'/>" charset="utf-8"></script>
 
+<script>
+	function chageLangSelect() {
+		var langSelect = document.getElementById("board_type");
+		var selectValue = langSelect.options[langSelect.selectedIndex].value;
+		location.href = "/page/bestBoard?board_type="+selectValue+"&pg=1"
+	}
+</script>
+
 <body>
 	<div id="wrap">
 		<header id="header">
@@ -43,9 +51,23 @@
 
 				<hr
 					style="margin-bottom: -2px; border: 0; height: 1px; background: #E6E6E6; clear: both;">
+	
+				<br><br>
 
 				<!--게시글 목록 테이블-->
 				<div class="container">
+					<div class="form-group">
+					<select class="form-control" id="board_type" style="width:30%; float:right;" onchange="chageLangSelect()">
+					    <option value=1 <c:if test="${board==1}"> selected </c:if>>전체 게시판</option>
+					    <option value=2 <c:if test="${board==2}"> selected </c:if>>자유게시판</option>
+					    <option value=3 <c:if test="${board==3}"> selected </c:if>>팁게시판</option>
+					    <option value=4 <c:if test="${board==4}"> selected </c:if>>노래추천게시판</option>
+					    <option value=5 <c:if test="${board==5}"> selected </c:if>>전국노래자랑게시판</option>
+					</select>
+					</div>
+					
+					<br><br><br>
+					
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -178,4 +200,11 @@
 		<%@ include file="/WEB-INF/include/footer.jsp"%>
 
 	</div>
+	
 </body>
+
+
+
+
+
+

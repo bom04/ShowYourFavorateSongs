@@ -166,7 +166,7 @@
 
 					<!--검색-->
 
-					<%@ include file="/WEB-INF/include/searching.jsp"%>
+					
 
 					<br> <br> <br> <br>
 

@@ -30,10 +30,10 @@
 					<!--게시판 내비게이션-->
 					<ul class="nav nav-tabs">
 						<li class="nav-item">
-							<a class="nav-link" style="cursor: pointer" data-url="map">노래방 맵</a>
+							<<c:if test="${infonav!=1}">a class="nav-link"</c:if><c:if test="${infonav==1}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="map">노래방 맵</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" style="cursor: pointer" data-url="relative">관련 사이트</a>
+							<<c:if test="${infonav!=2}">a class="nav-link"</c:if><c:if test="${infonav==2}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="relative">관련 사이트</a>
 						</li>
 					</ul>
 				</div>

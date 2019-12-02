@@ -49,13 +49,13 @@
 
 								<div class="form-group">
 									<label>이메일</label>
-									<form:input path="email" class="form-control w200" />
+									<form:input path="email" class="form-control w200" placeholder="이메일을 입력하세요."/>
 									<form:errors path="email" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
 								<div class="form-group">
 									<label>비밀번호</label>
-									<form:password path="password" class="form-control w200" />
+									<form:password path="password" class="form-control w200" placeholder="비밀번호를 입력하세요."/>
 									<form:errors path="password" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>

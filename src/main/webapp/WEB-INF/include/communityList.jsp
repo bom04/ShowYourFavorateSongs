@@ -30,15 +30,15 @@
 
 			<!--게시판 내비게이션-->
 			<ul class="nav nav-tabs">
-				<li class="nav-item"><a class="nav-link"
-					style="cursor: pointer" data-url="/page/bestBoard?pg=1">베스트</a></li>
-				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/freeBoard?pg=1">자유
+				<li class="nav-item"><<c:if test="${comunav!=1}">a class="nav-link"</c:if><c:if test="${comunav==1}">a class="nav-link active"</c:if>
+					style="cursor: pointer" data-url="/page/bestBoard?board_type=1&pg=1">베스트</a></li>
+				<li class="nav-item"><<c:if test="${comunav!=2}">a class="nav-link"</c:if><c:if test="${comunav==2}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="/page/freeBoard?pg=1">자유
 						게시판</a></li>
-				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/tipBoard?pg=1">팁
+				<li class="nav-item"><<c:if test="${comunav!=3}">a class="nav-link"</c:if><c:if test="${comunav==3}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="/page/tipBoard?pg=1">팁
 						게시판</a></li>
-				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/recommendBoard?pg=1">노래
+				<li class="nav-item"><<c:if test="${comunav!=4}">a class="nav-link"</c:if><c:if test="${comunav==4}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="/page/recommendBoard?pg=1">노래
 						추천</a></li>
-				<li class="nav-item"><a class="nav-link" style="cursor: pointer" data-url="/page/boastBoard?pg=1">전국
+				<li class="nav-item"><<c:if test="${comunav!=5}">a class="nav-link"</c:if><c:if test="${comunav==5}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="/page/boastBoard?pg=1">전국
 						노래 자랑</a></li>
 			</ul>
 		</div>

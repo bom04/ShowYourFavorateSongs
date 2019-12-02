@@ -56,19 +56,19 @@
 							
 							<div class="form-group">
 								<label>닉네임</label>
-								<form:input path="nickname" class="form-control" value="${me.nickname}"/>
+								<form:input path="nickname" class="form-control" value="${me.nickname}" placeholder="닉네임을 입력하세요."/>
 								<form:errors path="nickname" class="error"
 									style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 							</div>
 							<div class="form-group">
 								<label>새 비밀번호</label>
-								<form:password path="password" class="form-control" />
+								<form:password path="password" class="form-control" placeholder="비밀번호를 입력하세요."/>
 								<form:errors path="password" class="error"
 									style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 							</div>
 							<div class="form-group">
 								<label>새 비밀번호 확인</label>
-								<form:password path="password2" class="form-control" />
+								<form:password path="password2" class="form-control" placeholder="비밀번호를 다시 입력하세요." />
 								<form:errors path="password2" class="error"
 									style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 							</div>

@@ -44,25 +44,25 @@
 
 								<div class="form-group">
 									<label>이메일</label>
-									<form:input path="email" class="form-control w200" />
+									<form:input path="email" class="form-control w200" placeholder="이메일을 입력하세요."/>
 									<form:errors path="email" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
 								<div class="form-group">
 									<label>비밀번호</label>
-									<form:password path="password" class="form-control w200" />
+									<form:password path="password" class="form-control w200" placeholder="비밀번호를 입력하세요."/>
 									<form:errors path="password" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
 								<div class="form-group">
 									<label>비밀번호 확인</label>
-									<form:password path="password2" class=" form-control w200" />
+									<form:password path="password2" class=" form-control w200" placeholder="비밀번호를 다시 입력하세요."/>
 									<form:errors path="password2" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
 								<div class="form-group">
 									<label>닉네임</label>
-									<form:input path="nickname" class="form-control w200" />
+									<form:input path="nickname" class="form-control w200" placeholder="닉네임을 입력하세요."/>
 									<form:errors path="nickname" class="error"
 										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>

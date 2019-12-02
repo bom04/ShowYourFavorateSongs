@@ -475,6 +475,8 @@
 		</script>
 		</div>
 		<br> <br> <br>
+		<br> <br> <br>
+		<br> <br> <br>
 		<!--푸터-->
 		<%@ include file="/WEB-INF/include/footer.jsp"%>
 

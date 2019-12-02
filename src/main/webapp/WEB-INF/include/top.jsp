@@ -54,11 +54,11 @@
 					</li>
 					<li class="nav-item dropdown">
 						<!--커뮤니티 링크--> <a class="nav-link dropdown-toggle"
-						data-toggle="dropdown" data-url="/page/bestBoard?pg=1"
+						data-toggle="dropdown" data-url="/page/bestBoard?board_type=1&pg=1"
 						style="cursor: pointer" role="button" aria-haspopup="true"
 						aria-expanded="false">커뮤니티</a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a style="cursor: pointer" data-url="/page/bestBoard?pg=1">베스트
+							<li><a style="cursor: pointer" data-url="/page/bestBoard?board_type=1&pg=1">베스트
 									게시판</a></li>
 							<li><a style="cursor: pointer" data-url="/page/freeBoard?pg=1">자유
 									게시판</a></li>

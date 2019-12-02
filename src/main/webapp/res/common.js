@@ -20,12 +20,8 @@ $(function() {
 	$("[song-add-userpage]").click(function(event) {
 		var url = $(this).attr("song-add-userpage").split(" ");
 		var result=confirm('이 곡을 마이리스트에 추가하시겠습니까?');
-		if(url[0]=="") {
-			location.href ="/page/login";
-			return;
-		}
 		if(result) {
-			location.href ="/page/addSong3?user_idx="+url[0]+"&kara_type="+url[1]+"&song_id="+url[2]+"&sort="+url[3]+"&other_idx="+url[4];
+			location.href ="/page/addSong3?user_idx="+url[0]+"&kara_type="+url[1]+"&song_id="+url[2]+"&sort="+url[3];
 		}
 	});
 	

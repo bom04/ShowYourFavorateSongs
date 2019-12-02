@@ -3,11 +3,11 @@
 <title>너의 18번을 들려줘</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
 <c:url var="R" value="/" />
+
+
 <!-- 이게 원래 css코드임 
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -50,74 +50,58 @@
 								<c:when
 									test="${(user.manager eq 'false') &&(postModify ne 'yes') }">
 									<!--셀렉트태그-->
-									<select name="board_id" id="board_id" class="form-control" />
+									<select name="board_id" id="board_id" class="post_title_input" />
 									<option value="1"
 										<c:if test="${selectBoard == 1}">selected</c:if>>자유
 										게시판</option>
-									<option value="4"
-										<c:if test="${selectBoard == 4}">selected</c:if>>팁
-										게시판</option>
-									<option value="3"
-										<c:if test="${selectBoard == 3}">selected</c:if>>노래
-										추천</option>
 									<option value="2"
 										<c:if test="${selectBoard == 2}">selected</c:if>>전국
 										노래 자랑</option>
+									<option value="3"
+										<c:if test="${selectBoard == 3}">selected</c:if>>노래
+										추천</option>
+									<option value="4"
+										<c:if test="${selectBoard == 4}">selected</c:if>>팁
+										게시판</option>
 									</select>
 									<br>
 								</c:when>
 								<c:when
 									test="${(user.manager eq 'false') &&(postModify eq 'yes') }">
-									<c:if test="${selectBoard == 1}">
-										<p style="font-size: 1.7em;">자유 게시판</p>
-									</c:if>
-									<c:if test="${selectBoard == 2}">
-										<p style="font-size: 1.7em;">전국 노래 자랑</p>
-									</c:if>
-									<c:if test="${selectBoard == 3}">
-										<p style="font-size: 1.7em;">노래 추천</p>
-									</c:if>
-									<c:if test="${selectBoard == 4}">
-										<p style="font-size: 1.7em;">팁 게시판</p>
-									</c:if>
+									<c:if test="${selectBoard == 1}"><p style = "font-size:1.7em;">자유
+										게시판</p></c:if>
+									<c:if test="${selectBoard == 2}"><p style = "font-size:1.7em;">전국 노래 자랑</p></c:if>
+										<c:if test="${selectBoard == 3}"><p style = "font-size:1.7em;">노래 추천</p></c:if>
+									<c:if test="${selectBoard == 4}"><p style = "font-size:1.7em;">팁 게시판</p></c:if>
 									<br>
 								</c:when>
 								<c:when
 									test="${(user.manager eq 'true') &&(postModify eq 'yes') }">
-									<c:if test="${selectBoard == 1}">
-										<p style="font-size: 1.7em;">자유 게시판</p>
-									</c:if>
-									<c:if test="${selectBoard == 2}">
-										<p style="font-size: 1.7em;">전국 노래 자랑</p>
-									</c:if>
-									<c:if test="${selectBoard == 3}">
-										<p style="font-size: 1.7em;">노래 추천</p>
-									</c:if>
-									<c:if test="${selectBoard == 4}">
-										<p style="font-size: 1.7em;">팁 게시판</p>
-									</c:if>
-									<c:if test="${selectBoard == 5}">
-										<p style="font-size: 1.7em;">공지사항</p>
-									</c:if>
-
+									<c:if test="${selectBoard == 1}"><p style = "font-size:1.7em;">자유
+										게시판</p></c:if>
+									<c:if test="${selectBoard == 2}"><p style = "font-size:1.7em;">전국 노래 자랑</p></c:if>
+										<c:if test="${selectBoard == 3}"><p style = "font-size:1.7em;">노래 추천</p></c:if>
+									<c:if test="${selectBoard == 4}"><p style = "font-size:1.7em;">팁 게시판</p></c:if>
+									<c:if test="${selectBoard == 5}"><p style = "font-size:1.7em;">공지사항</p></c:if>
+									
 								</c:when>
 								<c:otherwise>
 									<!--셀렉트태그-->
-									<select name="board_id" id="board_id" class="form-control" />
-									<option value="5"
-										<c:if test="${selectBoard == 5}">selected</c:if>>공지사항</option>
+									<select name="board_id" id="board_id" class="post_title_input" />
 									<option value="1"
 										<c:if test="${selectBoard == 1}">selected</c:if>>자유
 										게시판</option>
-									<option value="4"
-										<c:if test="${selectBoard == 4}">selected</c:if>>팁
-										게시판</option>
-									<option value="3"
-										<c:if test="${selectBoard == 3}">selected</c:if>>노래
-										추천</option>
 									<option value="2"
 										<c:if test="${selectBoard == 2}">selected</c:if>>전국
 										노래 자랑</option>
+									<option value="3"
+										<c:if test="${selectBoard == 3}">selected</c:if>>노래
+										추천</option>
+									<option value="4"
+										<c:if test="${selectBoard == 4}">selected</c:if>>팁
+										게시판</option>
+									<option value="5"
+										<c:if test="${selectBoard == 5}">selected</c:if>>공지사항</option>
 									</select>
 									<br>
 								</c:otherwise>
@@ -140,17 +124,23 @@
 							<hr class="my-4" style="clear: both;">
 
 							<div style="padding-left: 10px;">
-								<label for="inputFile">파일 첨부</label> <input type="file"
-									name="filename" class="form-control-file" id="inputFile"
-									aria-describedby="fileHelp" multiple>
+								<label for="inputFile">파일 첨부</label>
+								<input type="file" name="filename[]" class="form-control-file" id="inputFile" aria-describedby="fileHelp" multiple>
 							</div>
-
-							<c:forEach var="file" items="${filelist}">
-								${file.file_name}
-								<span><a href="/page/delete?id=${file.file_id}"
-									style="font-weight: 200">삭제</a></span>
-							</c:forEach>
-
+							
+							<br>
+							
+							<p>삭제파일 선택</p>
+							<div style="padding-left:10px;padding:20px;border:1px solid #E6E6E6">							
+							    <c:forEach var="file" items="${filelist}">
+								    <div class="form-check">
+									    <label class="form-check-label">
+									    <input class="form-check-input" type="checkbox" name="check" id="${file.file_id}" value="${file.file_id}" style="padding-left:10px;">
+									    	${file.file_name}
+									    </label>
+								    </div>
+							    </c:forEach>
+							</div>
 							<hr class="my-4" style="clear: both;">
 
 							<div style="text-align: center; margin-top: 70px;">

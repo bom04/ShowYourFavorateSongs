@@ -3,6 +3,7 @@
 <title>너의 18번을 들려줘</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <c:url var="R" value="/" />
 <!-- 이게 원래 css코드임 
@@ -31,47 +32,39 @@
 			<%@ include file="/WEB-INF/include/top.jsp"%>
 		</header>
 
-<section>
+		<section>
 			<div id="content">
 				<div class="container-fluid">
-					<div style="margin: 300px 600px 200px; width: 700px;background-color:rgba( 255, 255, 255, 0.8 ); padding: 100px;">
-						<form method="post" modelAttribute="users"
-							onsubmit="return check()">
+					<div
+						style="margin: 300px 600px 200px; width: 700px; background-color: rgba(255, 255, 255, 0.8); padding: 100px;">
+						<form:form method="post" modelAttribute="changePwModel">
 							<fieldset style="color: #585858">
-								<legend><h1 style="color: #1C1C1C">비밀번호 변경</h1></legend>
+								<legend>
+									<h1 style="color: #1C1C1C">비밀번호 변경</h1>
+								</legend>
 								<hr style="margin-bottom: 20px;">
-							<script type="application/javascript">
-
-								function check() {
-									var password = $('#password').val();
-									var password2 = $('#password2').val();
-
-									if(password!=password2) {
-										alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-										return false;
-									}
-									return true;
-								}			
-		
-							</script>
 								<div class="form-group">
-									<label for="inputPassword1">비밀번호</label>
-									<input type="password" class="form-control" id="password" name="password" placeholder="비밀번호 입력">
+									<label>비밀번호</label>
+									<form:password path="password" class="form-control" placeholder="비밀번호를 입력하세요."/>
+									<form:errors path="password" class="error"
+										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
 								<div class="form-group">
-									<label for="inputPassword2">비밀번호 확인</label>
-									<input type="password" class="form-control" id="password2" placeholder="비밀번호 확인">
+									<label>비밀번호 확인</label>
+									<form:password path="password2" class="form-control" placeholder="비밀번호를 다시 입력하세요."/>
+									<form:errors path="password2" class="error"
+										style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
 								</div>
-								<button type="submit" class="btn btn-primary btn-block" style="margin-top: 50px;">확인
-								</button>
+								<button type="submit" class="btn btn-primary btn-block"
+									style="margin-top: 20px;">확인</button>
 							</fieldset>
-						</form>
+						</form:form>
 					</div>
-					
+
 				</div>
 
 			</div>
-			
+
 		</section>
 		<!--푸터-->
 		<footer id="footer">

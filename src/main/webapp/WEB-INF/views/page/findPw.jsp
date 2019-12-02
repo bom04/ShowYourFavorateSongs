@@ -3,6 +3,7 @@
 <title>너의 18번을 들려줘</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <c:url var="R" value="/" />
 <!-- 이게 원래 css코드임 
@@ -37,7 +38,8 @@
 				<div class="container-fluid">
 					<div
 						style="margin: 300px 600px 200px; width: 700px; background-color: rgba(255, 255, 255, 0.8); padding: 100px;">
-						<form method="post" modelAttribute="users" onsubmit="return check()">
+						<form method="post" modelAttribute="users"
+							onsubmit="return check()">
 							<fieldset style="color: #585858">
 								<legend>
 									<h1 style="color: #1C1C1C">비밀번호 찾기</h1>
@@ -45,32 +47,19 @@
 								<p>
 									<small>비밀번호를 찾기 위해 아래 정보를 입력하세요</small>
 								</p>
-							<script type="application/javascript">
-								function check() {
-									var email = $('#email').val();
-
-									<c:forEach var="user" items="${users}">
-									if('${user.email}'==email) {
-										return true;
-									}
-									                                
-								</c:forEach>
-								alert('존재하지 않는 이메일입니다.');
-								$('#email').val('');
-								return false;
-								}			
-		
-							</script>
 								<hr style="margin-bottom: 20px;">
-								<div class="form-group">
-									<label for="inputEmail1">이메일 주소</label> <input type="email"
-										class="form-control" id="email" name="email"
-										aria-describedby="emailHelp" placeholder="이메일 주소 입력" required>
-								</div>
+								<form:form method="post" modelAttribute="findPwModel">
+									<div class="form-group">
+										<label for="inputEmail1">이메일 주소 <form:input
+												path="email" class="form-control" 
+												placeholder="이메일 주소 입력" style="width:500px" /> <form:errors path="email"
+												class="error"
+												style="font-style:italic;font-size:0.8em;color:red;font-weight:bold" />
+									</div>
 
-								<button type="submit" class="btn btn-primary btn-block" 
-									style="margin-top: 20px;">다음 단계</button>
-								
+									<button type="submit" class="btn btn-primary btn-block"
+										style="margin-top: 20px;">다음 단계</button>
+								</form:form>
 							</fieldset>
 						</form>
 					</div>
