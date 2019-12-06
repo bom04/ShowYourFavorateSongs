@@ -50,7 +50,7 @@
 							<h4 style="padding-left: 5px;">공지사항</h4>
 						</c:if>
 						<br>
-						<h1 class="display-5">${post.title}</h1>
+						<p style="font-size: 28pt;color:black" class="display-5">${post.title}</p>
 						<br>
 						<!--글 헤더-->
 						<div>
@@ -78,56 +78,68 @@
 
 						<!--내용-->
 						<div class="lead-3" style="width: 100%">
-							<p>${post.content}</p>
+
+							<pre>${post.content}</pre>
 							<!--<p>본문 내용</p>-->
 							<br> <br>
 							<!--파일-->
-
 							<c:forEach var="file" items="${files}">
-								<p style="text-align: center;">
-									<img
-										src="${pageContext.request.contextPath}/upload/${file.file_name}"
-										style="width: 700px;">
-								</p>
+								<c:choose>
+									<c:when
+										test="${extensions.get(file.file_id) eq 'jpg' || extensions.get(file.file_id) eq 'png' || extensions.get(file.file_id) eq 'gif' || extensions.get(file.file_id) eq 'jpeg' || extensions.get(file.file_id) eq 'bmp' || extensions.get(file.file_id) eq 'tiff'}">
+										<p style="text-align: center;">
+											<img
+												src="${pageContext.request.contextPath}/upload/${file.file_name}"
+												style="width: 700px;">
+										</p>
+									</c:when>
+									<c:otherwise></c:otherwise>
+								</c:choose>
+
+								<br>
+								<br>
 							</c:forEach>
 							<br> <br>
 						</div>
+						<c:if test="${post.board.board_id!=5 }">
+							<!--추천-->
+							<div class="lead"
+								style="text-align: center; margin-bottom: 80px;">
+								<c:choose>
+									<c:when test="${empty user }">
+										<a class="btn btn-default" href="/page/login" role="button"
+											style="border: 1px solid grey"><img
+											src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
+									</c:when>
+									<c:otherwise>
 
-						<!--추천-->
-						<div class="lead" style="text-align: center; margin-bottom: 80px;">
-							<c:choose>
-								<c:when test="${empty user }">
-									<a class="btn btn-default" href="/page/login" role="button"
-										style="border: 1px solid grey"><img
-										src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
-								</c:when>
-								<c:otherwise>
+										<c:choose>
+											<c:when test="${isLiked eq null}">
+												<a class="btn btn-default"
+													href="/page/post/${post.post_id}/post_like" role="button"
+													style="border: 1px solid grey"><img
+													src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
+											</c:when>
+											<c:otherwise>
+												<a class="btn btn-primary"
+													href="/page/post/${post.post_id}/post_like" role="button"><img
+													src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose>
+								<div class="btn"
+									style="border: 1px solid grey; background: white; color: grey">&nbsp;${like_num}</div>
+							</div>
+						</c:if>
 
-									<c:choose>
-										<c:when test="${isLiked eq null}">
-											<a class="btn btn-default"
-												href="/page/post/${post.post_id}/post_like" role="button"
-												style="border: 1px solid grey"><img
-												src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
-										</c:when>
-										<c:otherwise>
-											<a class="btn btn-primary"
-												href="/page/post/${post.post_id}/post_like" role="button"><img
-												src="${pageContext.request.contextPath}/res/images/likey.png">&nbsp;추천</a>
-										</c:otherwise>
-									</c:choose>
-								</c:otherwise>
-							</c:choose>
-							<div class="btn"
-								style="border: 1px solid grey; background: white; color: grey">&nbsp;${like_num}</div>
-						</div>
-
+						<br>
 						<c:choose>
 							<c:when test="${post.user.user_idx eq user.user_idx }">
 								<!-- 자기가 쓴 글일 때-->
 								<button type="button" class="btn btn-primary btn3"
 									style="float: right; margin-right: 10px;"
-									onclick="location.href='/page/postDelete?post_id=${post.post_id}'">삭제</button>
+									delete-post="${post.post_id}">삭제</button>
 
 								<button type="button" class="btn btn-primary btn3"
 									style="float: right; margin-right: 10px;"
@@ -142,6 +154,25 @@
 
 							</c:when>
 						</c:choose>
+						<br>
+						<br>
+						<br>
+
+						<!--파일 다운로드-->
+
+						<c:if test="${files.size()>0}">
+							<hr class="my-4" style="clear: both;">
+							<div style="height: 20px; padding-left: 10px;">
+								첨부 파일
+								<div>
+									<br>
+									<c:forEach var="file" items="${files}">
+										<c:set var="ext" value="${extensions.get(file.file_id)}" />
+										<a href="../../upload/${file.file_name}" download>${file.file_name}</a>
+									</c:forEach>
+						</c:if>
+
+
 						<br> <br>
 						<hr class="my-4" style="clear: both;">
 						<!--댓글-->
@@ -168,9 +199,8 @@
 													<c:choose>
 														<c:when
 															test="${comments.user.user_idx eq user.user_idx || user.manager eq 'true'}">
-															<span style="float: right;"><a
-																href="/page/post/${post.post_id}/comment/${comments.comment_id}/delete"
-																style="font-weight: 200">삭제</a></span>
+															<span style="float: right; font-weight: 200"> <a
+																style="font-weight: 200;cursor:pointer" delete-comment="${post.post_id} ${comments.comment_id}">삭제</a></span>
 														</c:when>
 													</c:choose>
 												</c:if>
@@ -266,8 +296,7 @@
 																	<c:when
 																		test="${replies.user.user_idx eq user.user_idx || user.manager eq 'true'}">
 																		<span style="float: right;"><a
-																			href="/page/post/${post.post_id}/comment/${comments.comment_id}/${replies.reply_id}/delete"
-																			style="font-weight: 200">삭제</a></span>
+																			style="font-weight: 200;cursor:pointer" delete-reply="${post.post_id} ${comments.comment_id} ${replies.reply_id}">삭제</a></span>
 																	</c:when>
 																</c:choose>
 															</p>
@@ -290,7 +319,7 @@
 																onclick="location.href='/page/login'">등록</button>
 														</c:when>
 														<c:otherwise>
-															<form method="post" 
+															<form method="post"
 																action="/page/post/${post.post_id}/comment/${comments.comment_id}/reply">
 																<textarea id="cont2" name="content" cols="30" rows="10"
 																	class="txar" placeholder=""></textarea>
@@ -309,7 +338,7 @@
 							</ul>
 						</div>
 
-<script type="text/javascript">
+						<script type="text/javascript">
 			$(document).ready(function() {
 				$('.txar').on('keyup', function() {
 
@@ -346,9 +375,10 @@
 											onclick="location.href='/page/login'">등록</button>
 									</c:when>
 									<c:otherwise>
-										<form onsubmit="return check()" method="post" action="/page/post/${post.post_id}/comment">
-											<textarea id="context" name="content" cols="30" rows="10" class="txar"
-												placeholder=""></textarea>
+										<form onsubmit="return check()" method="post"
+											action="/page/post/${post.post_id}/comment">
+											<textarea id="context" name="content" cols="30" rows="10"
+												class="txar" placeholder=""></textarea>
 
 											<button type="submit" value="" class="btn btn-primary"
 												style="float: left; width: 100%">등록</button>

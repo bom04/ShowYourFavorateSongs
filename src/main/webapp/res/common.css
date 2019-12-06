@@ -6131,7 +6131,7 @@ a.close.disabled {
 
 .modal {
   position: fixed;
-  top: 0;
+  top: 300;
   left: 0;
   z-index: 1050;
   display: none;
@@ -6251,10 +6251,12 @@ a.close.disabled {
   width: 100vw;
   height: 100vh;
   background-color: #000;
+  
+  opacity:0;
 }
 
 .modal-backdrop.fade {
-  opacity: 0;
+  opacity: 0.5;
 }
 
 .modal-backdrop.show {

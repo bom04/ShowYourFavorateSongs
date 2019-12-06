@@ -96,7 +96,7 @@
 								</c:forEach>
 								<c:set var="commentAndReplyNum" value="${commentNum+replyNum}" />
 								<c:if
-									test="${num>fn:length(posts)-10*pg && num<=fn:length(posts)-10*(pg-1)}">
+									test="${num>fn:length(posts)-6*pg && num<=fn:length(posts)-6*(pg-1)}">
 									<tr>
 										<td><c:out value="${num}" /></td>
 										<td colspan=2>${post.board.board_name}</td>
@@ -131,7 +131,7 @@
 						<ul class="pagination">
 							<!-- 한 페이지당 10개 게시글일때 총 몇 페이지인지 -->
 							<fmt:parseNumber var="totalPg"
-								value="${fn:length(posts)/10+(1-((fn:length(posts)/10)%1))%1}"
+								value="${fn:length(posts)/6+(1-((fn:length(posts)/6)%1))%1}"
 								integerOnly="true" />
 							<!-- 1,2,3같이 페이지 3개가 한 페이지네이션일때 총 몇 페이지네이션이 나오는지 -->
 							<fmt:parseNumber var="paginationTotal"
@@ -157,16 +157,16 @@
 							<c:forEach var="i" begin="1" end="${totalPg}" step="3">
 								<c:if test="${i>(paginationNum-1)*3 && (i+2)<=paginationNum*3}">
 									<li class="page-item <c:if test="${pg eq i}">active</c:if>"><a
-										class="page-link" href="/page/bestBoard?pg=${i}">${i}</a></li>
+										class="page-link" href="/page/bestBoard?board_type=${board}&pg=${i}">${i}</a></li>
 									<c:if test="${(i+1)<=totalPg}">
 										<li
 											class="page-item <c:if test="${pg eq (i+1)}">active</c:if>"><a
-											class="page-link" href="/page/bestBoard?pg=${i+1}">${i+1}</a></li>
+											class="page-link" href="/page/bestBoard?board_type=${board}&pg=${i+1}">${i+1}</a></li>
 									</c:if>
 									<c:if test="${(i+2)<=totalPg}">
 										<li
 											class="page-item <c:if test="${pg eq (i+2)}">active</c:if>"><a
-											class="page-link" href="/page/bestBoard?pg=${i+2}">${i+2}</a></li>
+											class="page-link" href="/page/bestBoard?board_type=${board}&pg=${i+2}">${i+2}</a></li>
 									</c:if>
 								</c:if>
 
@@ -179,7 +179,7 @@
 							<c:if
 								test="${(paginationNum ne paginationTotal)&& (paginationTotal ne 0)}">
 								<li class="page-item"><a class="page-link"
-									href="/page/bestBoard?pg=${paginationNext}">Next</a></li>
+									href="/page/bestBoard?board_type=${board}&pg=${paginationNext}">Next</a></li>
 							</c:if>
 						</ul>
 

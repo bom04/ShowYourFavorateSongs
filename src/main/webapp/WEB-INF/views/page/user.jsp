@@ -35,10 +35,10 @@
 				<div
 					style="text-align: center; padding-top: 200px; padding-bottom: 20px;">
 					<c:if test="${me.user_idx==u.user_idx}">
-						<h1 style="font-size: 20pt">마이 페이지</h1>
+						<p style="font-size: 23pt;font-weight:550;color:black">마이페이지</p>
 					</c:if>
 					<c:if test="${me.user_idx!=u.user_idx}">
-						<h1 style="font-size: 20pt">${u.nickname}님의 개인페이지</h1>
+						<p style="font-size: 23pt;font-weight:550;color:black">${u.nickname}님의 개인페이지</p>
 					</c:if>
 				</div>
 
@@ -48,7 +48,7 @@
 				<div class="container"
 					style="margin-bottom: 100px; margin-top: 50px;">
 					<div class="jumbotron">
-						<span style="float: left; margin-right: 10px; padding-top: 5px;"><h3>${u.nickname}</h3></span>
+						<span style="float: left; margin-right: 10px; padding-top: 5px;"><p style="font-size: 18pt;font-weight:600;color:black">${u.nickname}</p></span>
 						<c:if test="${u.user_idx eq user.user_idx}">
 							<button type="button" class="btn btn-primary btn5"
 								style="margin-right: 40px; border: 1px solid #BDBDBD; background: #fff; color: #BDBDBD;"
@@ -56,23 +56,24 @@
 								수정</button>
 						</c:if>
 						<c:choose>
-							<c:when test="${u.user_idx eq user.user_idx || user.manager eq true}">
+							<c:when
+								test="${u.user_idx eq user.user_idx || user.manager eq true}">
 								<!-- 본인의 마이페이지 일때 -->
-								<button type="button" class="btn btn-default btn4"
-									style="border: 1px solid grey">팔로우</button>
+								<button type="button" class="btn btn-default"
+									style="border: 1px solid grey;">팔로우</button>
 							</c:when>
 							<c:otherwise>
 								<!-- 본인의 마이페이지가 아닐때-->
 								<c:choose>
 									<c:when test="${follow eq true}">
 										<!-- 이미 팔로우한 유저일때 -->
-										<button type="button" class="btn btn-primary btn4"
+										<button type="button" class="btn btn-primary"
 											delete-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
 									</c:when>
 									<c:otherwise>
 										<!-- 팔로우가 안되어있는 유저일때 -->
-										<button type="button" class="btn btn-default btn4"
-											style="border: 1px solid grey"
+										<button type="button" class="btn btn-default"
+											style="border: 1px solid grey" 
 											data-follow="${u.user_idx} ${kara} ${sort} ${me.user_idx}">팔로우</button>
 									</c:otherwise>
 								</c:choose>
@@ -86,29 +87,30 @@
 						<c:choose>
 							<c:when test="${user.manager eq 'true' }">
 								<button type="button" class="btn btn-primary btn3"
-									style="float: right; border: 1px solid #FA5858; background: #FA5858;"
-									onclick="location.href='userDelete?user_idx=${u.user_idx}'">유저
+									style="float: right; border: 1px solid #FA5858; background: #FA5858;" delete-user="${u.user_idx}">유저
 									삭제</button>
 							</c:when>
 						</c:choose>
 						<div style="margin-top: 30px; color: #2E2E2E;">
-							<span style="font-weight: bold;"> <a href="#modalLayer"
-								class="modalLink"
-								style="text-decoration: none; margin-right: 20px;">팔로우 
-								<c:choose>
-										<c:when test="${empty followingList}">0</c:when>
+							<!--모달열기-->
+							<span style="font-weight: bold; margin-right: 20px;"> <a
+								href="javascript:void(0);" data-toggle="modal"
+								data-target="#myModal" style="text-decoration: none;"> 팔로잉 <c:choose>
+										<c:when test="${empty followingList}">&nbsp;&nbsp;0</c:when>
 										<c:otherwise>
 											<c:set var="followingListNum"
 												value="${fn:length(followingList)}" />${followingListNum}
-								</c:otherwise>
-									</c:choose>
-							</a>
+									</c:otherwise>
+									</c:choose></a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="/page/userPost?user_idx=${u.user_idx}" style="text-decoration: none;">포스트 ${count}</a>
+								href="/page/userPost?user_idx=${u.user_idx}"
+								style="text-decoration: none;">포스트 ${count}</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="/page/userComment?user_idx=${u.user_idx}" style="text-decoration: none;">댓글 ${countComment}</a>
+								href="/page/userComment?user_idx=${u.user_idx}"
+								style="text-decoration: none;">댓글 ${countComment}</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
-								href="/page/recommendedPost?user_idx=${u.user_idx}" style="text-decoration: none;">좋아요 ${countLike}</a>
+								href="/page/recommendedPost?user_idx=${u.user_idx}"
+								style="text-decoration: none;">좋아요 ${countLike}</a>
 							</span>
 
 						</div>
@@ -120,7 +122,7 @@
 				</div>
 
 				<div style="padding-bottom: 10px; text-align: center;">
-					<h1 style="font-size: 15pt">${u.nickname}님의 애창곡 목록</h1>
+					<p style="font-size: 15pt;font-weight:550;color:black">${u.nickname}님의 애창곡 목록</p>
 				</div>
 				<hr
 					style="margin-bottom: -40px; border: 0; height: 1px; background: #E6E6E6; clear: both;">
@@ -167,10 +169,13 @@
 									<tr
 										<c:choose>
 											<c:when test="${u.user_idx eq user.user_idx}"> song-delete="${user.user_idx} ${kara} ${sort} ${song.song.song_id}"</c:when>
-											<c:otherwise>song-add-userpage="${user.user_idx} ${kara} ${song.song.song_id} ${sort}"</c:otherwise>
+											<c:otherwise>
+												<c:if test="${user.manager eq 'true'}"></c:if>
+													<c:if test="${user.manager ne 'true'}">song-add-userpage="${user.user_idx} ${kara} ${song.song.song_id} ${sort} ${u.user_idx}"</c:if>
+										</c:otherwise>
 										</c:choose>
 										style="cursor: pointer">
-										
+
 										<td>${song.song.song_num}</td>
 										<td colspan=2>${song.song.title}</td>
 										<td>${song.song.singer}</td>
@@ -193,7 +198,9 @@
 							<c:forEach var="following" items="${followingList}"
 								varStatus="status">
 								<tr id="tr">
-									<td><a href="/page/user?user_idx=${following.user_idx}&kara_type=0&sort=0" style="cursor: pointer">${following.nickname}</a></td>
+									<td><a
+										href="/page/user?user_idx=${following.user_idx}&kara_type=0&sort=0"
+										style="cursor: pointer">${following.nickname}</a></td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -203,6 +210,36 @@
 					</div>
 				</div>
 
+			</div>
+
+			<!-- 팔로잉 목록 모달 -->
+			<div class="modal" id="myModal" z-index="">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<div class="modal-header">
+							<p style="font-size: 13pt;font-weight:400;color:black" class="modal-title">${u.nickname}님의팔로잉목록</p>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+						<div class="modal-body">
+							<c:forEach var="following" items="${followingList}">
+								<sapn> <a
+									href="/page/user?user_idx=${following.user_idx}&kara_type=0&sort=0"
+									style="cursor: pointer">${following.nickname}</a> </span>
+								&nbsp;&nbsp;&nbsp; 
+							</c:forEach>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
 			</div>
 
 		</section>

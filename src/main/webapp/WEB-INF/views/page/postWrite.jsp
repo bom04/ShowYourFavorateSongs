@@ -24,6 +24,28 @@
 <!-- jQuery -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$('.post_body_input').on('keyup', function() {
+
+			if ($(this).val().length > 1000) {
+
+				$(this).val($(this).val().substring(0, 1000));
+
+			}
+
+		});
+
+	});
+	function check() {
+		if($('input[name=title]').val()=='') {
+			alert('제목은 필수 요소입니다.');
+			return false;
+		}
+		return true;	
+	}
+	</script>
 
 <body>
 	<div id="wrap">
@@ -136,56 +158,46 @@
 								<textarea name="content" class="post_body_input"
 									id="exampleTextarea" rows="15" placeholder="내용을 입력하세요">${post.content}</textarea>
 							</div>
-							<script type="text/javascript">
-			$(document).ready(function() {
-				$('.post_body_input').on('keyup', function() {
-
-					if ($(this).val().length > 1000) {
-
-						$(this).val($(this).val().substring(0, 1000));
-
-					}
-
-				});
-
-			});
-			function check() {
-				if($('input[name=title]').val()=='') {
-					alert('제목은 필수 요소입니다.');
-					return false;
-				}
-				return true;	
-			}
-		</script>
-
+							
 							<hr class="my-4" style="clear: both;">
-
+							<!--파일 첨부-->
 							<div style="padding-left: 10px;">
-								<label for="inputFile">파일 첨부</label> <input type="file"
-									name="filename" class="form-control-file" id="inputFile"
-									aria-describedby="fileHelp" multiple>
+								<label for="inputFile">파일 첨부</label>
+								<input type="file" name="filename" class="form-control-file" aria-describedby="fileHelp" multiple>
 							</div>
-
-							<c:forEach var="file" items="${filelist}">
-								${file.file_name}
-								<span><a href="/page/delete?id=${file.file_id}"
-									style="font-weight: 200">삭제</a></span>
-							</c:forEach>
-
+							
+							<br>
+							
+							<c:if test="${filelist.size()>0}">
+							<p>삭제파일 선택</p>
+							<div style="padding-left:10px;padding:20px;border:1px solid #E6E6E6">							
+							    <c:forEach var="file" items="${filelist}">
+								    <div class="form-check">
+									    <label class="form-check-label">
+									    <input class="form-check-input" type="checkbox" name="check" id="${file.file_id}" value="${file.file_id}" style="padding-left:10px;">
+									    	${file.file_name}
+									    </label>
+								    </div>
+							    </c:forEach>
+							</div>
+							</c:if>
+							
+							
 							<hr class="my-4" style="clear: both;">
 
 							<div style="text-align: center; margin-top: 70px;">
 								<button type="button" class="btn btn-primary btn2"
-									style="width: 100px;" onclick="location.href='freeBoard?pg=1'">취소</button>
-								<button type="submit" value="submit" class="btn btn-primary"
-									style="width: 100px;">등록</button>
+									style="width: 100px;" data-cancel>취소</button>
+								<c:if test="${postModify eq 'yes'}"><button type="submit" value="submit" class="btn btn-primary"
+									style="width: 100px;" post-modify>등록</button></c:if>
+								<c:if test="${postModify ne 'yes'}"><button type="submit" value="submit" class="btn btn-primary"
+									style="width: 100px;">등록</button></c:if>
 							</div>
 						</form:form>
 					</div>
 
 				</div>
 			</div>
-
 
 
 		</section>
@@ -196,4 +208,8 @@
 	</div>
 </body>
 
-<!---->
+
+
+
+
+

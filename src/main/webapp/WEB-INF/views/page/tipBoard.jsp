@@ -70,7 +70,7 @@
 								<c:set var="commentAndReplyNum" value="${commentNum+replyNum}" />
 								
 								<c:if
-									test="${num>fn:length(tipPosts)-10*pg && num<=fn:length(tipPosts)-10*(pg-1)}">
+									test="${num>fn:length(tipPosts)-6*pg && num<=fn:length(tipPosts)-6*(pg-1)}">
 
 									<tr>
 										<td><c:out value="${num}" /></td>
@@ -104,7 +104,7 @@
 						<ul class="pagination">
 							<!-- 한 페이지당 10개 게시글일때 총 몇 페이지인지 -->
 							<fmt:parseNumber var="totalPg"
-								value="${fn:length(tipPosts)/10+(1-((fn:length(tipPosts)/10)%1))%1}"
+								value="${fn:length(tipPosts)/6+(1-((fn:length(tipPosts)/6)%1))%1}"
 								integerOnly="true" />
 							<!-- 1,2,3같이 페이지 3개가 한 페이지네이션일때 총 몇 페이지네이션이 나오는지 -->
 							<fmt:parseNumber var="paginationTotal"

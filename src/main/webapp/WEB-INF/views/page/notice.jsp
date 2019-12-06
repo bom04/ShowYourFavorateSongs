@@ -56,7 +56,6 @@
 								<th colspan=2>날짜</th>
 								<th>댓글</th>
 								<th>조회</th>
-								<th>추천</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,12 +84,7 @@
 										<td colspan=2><fmt:formatDate value="${post.date}" pattern="yy/MM/dd HH:mm"/></td>
 										<td>${commentAndReplyNum}</td>
 										<td>${post.view}</td>
-										<td><c:choose>
-												<c:when test="${map_like.containsKey(post.post_id) eq true}">
-														${map_like.get(post.post_id)}
-												</c:when>
-												<c:otherwise>0</c:otherwise>
-											</c:choose></td>
+										
 										
 									</tr>
 								</c:if>

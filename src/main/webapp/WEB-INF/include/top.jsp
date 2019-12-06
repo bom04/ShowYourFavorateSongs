@@ -93,7 +93,8 @@
 						<c:choose>
 							<c:when test="${user.manager eq 'true' }">
 								<ul class="nav navbar-nav navbar-right">
-									<li class="nav-item">관리자</li>
+									<li class="nav-item"><a class="nav-link login"
+										style="color: white;border: 1px solid black; padding: 10px 15px 10px 15px;">관리자</a></li>
 									<li class="nav-item"><a class="nav-link login"
 										data-url="/page/logout"
 										style="color: white; cursor: pointer; border: 1px solid #585858; padding: 10px 15px 10px 15px;">로그아웃</a>
