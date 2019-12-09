@@ -29,19 +29,24 @@
 		<section>
 			<div id="content"
 				style="background-image: url('${pageContext.request.contextPath}/res/images/main2.png'); background-repeat: no-repeat; background-size: cover; 
-				background-attachment: fixed;height=100px;">
+				background-attachment: fixed;">
 				<div class="container">
 					<div class="jumbotron"
-						style="padding-top: 200px; padding-bottom: 100px;">
+						style="padding-top: 350px; padding-bottom: 100px; height:300px;">
 						<!--곡 검색-->
+						<div style="text-align:center">
+							<p style="color:white;font-weight:bold;font-size:30pt;">곡 검색</p>
+							<hr style="border:3px solid white;width:60px;"/>
+							<p style="color:white;font-weight:bold;font-size:15pt;">찾고있는 노래가 있나요? 지금 바로 부르고 싶은 곡을 검색해보세요</p>
+						</div>
 						<div style="margin-top: 30px;">
 							<form action="/page/searchingSong/0" method="get">
 								<!-- 0이면 ky,1이면 tj -->
 								<input type="text" class="search-song" name="keyword"
-									placeholder="곡 제목 혹은 가수 검색" style="text-align: center;">
+									placeholder="곡 제목 혹은 가수 검색" style="text-align: center;border:none; height:50px">
 								<div style="text-align: center; margin-top: 30px;">
 									<button type="submit" class="btn btn-primary"
-										style="width: 200px;">찾기</button>
+										style="width: 200px;font-size:10pt">찾기</button>
 								</div>
 							</form>
 						</div>
@@ -87,14 +92,19 @@
 									가기</button>
 							</div>
 							<div
-								style="width: 333px; height: 350px; background: #D8D8D8; padding: 60px 30px; text-align: center;">
+								style="width: 337px; height: 350px; background: #D8D8D8; padding: 60px 30px; text-align: center;">
 								<h2>노래방 맵</h2>
 								<h2>-</h2>
 								<p style="color: #151515; font-weight: 400;">내 주변에 있는 노래방을
 									찾아보세요</p>
 								<button type="button" class="btn btn-primary"
-									style="margin-top: 40px; width: 120px;"
+									style="margin-top: 63px; width: 120px;"
 									onclick="location.href='map'">바로 가기</button>
+							</div>
+							<div
+								style="width: 100%; height: 170px; background: #424242; padding: 60px 30px; text-align: center; margin-top:20px;">
+								<h4 style="color: white;font-weight:bold">너의 18번을 들려줘가 처음이신가요?</h4>
+								<a href="help"><h4 style="color: white;font-weight:bold">도움말로 이동</h4></a>
 							</div>
 						</div>
 					</div>

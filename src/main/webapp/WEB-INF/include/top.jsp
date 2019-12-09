@@ -77,11 +77,12 @@
 							<li><a data-url="/page/map" style="cursor: pointer">노래방 맵</a></li>
 							<li><a style="cursor: pointer" data-url="/page/relative">관련
 									사이트</a></li>
+							<li><a data-url="/page/help" style="cursor: pointer">사이트 이용 정보</a></li>
 						</ul>
 					</li>
 				</ul>
 				<c:choose>
-					<c:when test="${empty user }">
+					<c:when test="${empty user}">
 						<ul class="nav navbar-nav navbar-right">
 							<li class="nav-item"><a class="nav-link login"
 								data-url="/page/login"

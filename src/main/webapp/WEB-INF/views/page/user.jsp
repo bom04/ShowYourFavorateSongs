@@ -93,15 +93,17 @@
 						</c:choose>
 						<div style="margin-top: 30px; color: #2E2E2E;">
 							<!--모달열기-->
-							<span style="font-weight: bold; margin-right: 20px;"> <a
-								href="javascript:void(0);" data-toggle="modal"
-								data-target="#myModal" style="text-decoration: none;"> 팔로잉 <c:choose>
+							<span style="font-weight: bold; margin-right: 20px;"> 
+								<a href="javascript:void(0);" data-toggle="modal"
+								data-target="#myModal" style="text-decoration: none;"> 팔로잉 
+									<c:choose>
 										<c:when test="${empty followingList}">&nbsp;&nbsp;0</c:when>
 										<c:otherwise>
 											<c:set var="followingListNum"
 												value="${fn:length(followingList)}" />${followingListNum}
-									</c:otherwise>
-									</c:choose></a>
+										</c:otherwise>
+									</c:choose>
+								</a>
 							</span> <span style="font-weight: bold; margin-right: 20px;"> <a
 								href="/page/userPost?user_idx=${u.user_idx}"
 								style="text-decoration: none;">포스트 ${count}</a>
@@ -191,7 +193,7 @@
 
 				<!-- Button trigger modal -->
 
-				<div id="modalLayer">
+				<div class="modal" id="modalLayer">
 					<div class="modalContent">
 						팔로우 목록
 						<table>
@@ -213,7 +215,7 @@
 			</div>
 
 			<!-- 팔로잉 목록 모달 -->
-			<div class="modal" id="myModal" z-index="">
+			<div class="modal" id="myModal">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 

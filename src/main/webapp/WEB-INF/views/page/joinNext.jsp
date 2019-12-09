@@ -35,7 +35,7 @@
 			<div id="content">
 				<div class="container-fluid">
 
-					<div style="margin: 300px 600px 200px; width: 700px;background-color:rgba( 255, 255, 255, 0.8 ); padding: 100px;">
+					<div style="margin: 300px 700px 200px; width: 700px;background-color:rgba( 255, 255, 255, 0.8 ); padding: 100px;">
 
 						<h1 style="color: #1C1C1C">회원가입</h1>
 						<hr style="margin-bottom: 20px;">

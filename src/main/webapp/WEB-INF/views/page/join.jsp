@@ -34,7 +34,7 @@
 			<div id="content">
 				<div class="container-fluid">
 					<div
-						style="margin: 300px 600px 200px; width: 700px; background-color: rgba(255, 255, 255, 0.8); padding: 100px;">
+						style="margin: 300px 700px 200px; width: 700px; background-color: rgba(255, 255, 255, 0.8); padding: 100px;">
 						<form:form method="post" modelAttribute="userModel">
 							<fieldset style="color: #585858">
 								<legend>

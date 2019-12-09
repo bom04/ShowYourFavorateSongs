@@ -25,6 +25,6 @@
 <!-- <script src="<c:url value='/js/common.js'/>" charset="utf-8"></script>-->
 
 <body>
-		<div class="image-container-main" style="position: absolute; top: 0; background: black;"><img src="${pageContext.request.contextPath}/res/images/main1.png"></div>
+		<div class="image-container-main" style="position: absolute; top: 0; background: black;"><img src="${pageContext.request.contextPath}/res/images/main1.png" style="width:100%"></div>
 
 </body>

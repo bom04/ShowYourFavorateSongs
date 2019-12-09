@@ -167,6 +167,7 @@ public class APIController {
 		// &&userRepositroy.findByNickname(user.getNickname())==null) {
 		userRepository.save(new User(userModel.getEmail(), userModel.getPassword(), userModel.getNickname(), null,
 				auth_key, false, false));
+		System.out.println("auth_key: "+auth_key);
 		es.sendEmail(userModel.getEmail(), auth_key); // 받는 사람 이메일
 		return "redirect:joinNext";
 	}
@@ -636,6 +637,13 @@ public class APIController {
 		int infonav=2;
 		model.addAttribute("infonav",infonav);
 		return "page/relative";
+	}
+
+	@RequestMapping(value = "help", method = RequestMethod.GET)
+	public String help(Model model) {
+		int infonav=3;
+		model.addAttribute("infonav",infonav);
+		return "page/help";
 	}
 
 	@RequestMapping(value = "notice", method = RequestMethod.GET)
@@ -1262,6 +1270,15 @@ public class APIController {
 	public String postModify2(@RequestParam("post_id") int post_id, final HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+		//뒤로가기+경고문 추가
+		User u = (User) session.getAttribute("user");
+		if(u==null) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('로그인 후 이용해 주세요'); location.href='login';</script>");
+			out.flush();
+		}
+
 		int maxSize = 1024 * 1024 * 10;
 
 		// 웹서버 컨테이너 경로
@@ -1292,6 +1309,9 @@ public class APIController {
 		else
 			System.out.println("id입니다!!!:" + user.getUser_idx());
 		Board board = null;
+
+		List<File2> test=new ArrayList<>();
+
 		try {
 			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8",
 					new DefaultFileRenamePolicy());
@@ -1305,7 +1325,7 @@ public class APIController {
 				for (int i = 0; i < check.length; i++) {
 					int file_id = Integer.parseInt(check[i]);
 					File2 file = fileRepository.findById(file_id).get();
-					System.out.println("삭제 체트된 파일명 " + file.getFile_name());
+					System.out.println("삭제 체크된 파일명 " + file.getFile_name());
 					fileRepository.deleteById(file_id); // db에서 파일 삭제
 					try {
 						Files.delete(getFilePath(file)); // 서버에서 파일 삭제
@@ -1315,12 +1335,6 @@ public class APIController {
 				}
 			}
 
-			// String[] checked_files=request.getParameterValues("check");
-			// for(int i=0;i<checked_files.length;i++) {
-			// System.out.println("----체크된 파일:"+checked_files[i]);
-			// }
-
-			// user_idx = Integer.parseInt(multi.getParameter("user_idx"));
 			System.out.println("user_idx:" + user_idx);
 
 			// Optional<User> optinalEntity = userRepository.findById(user_idx);
@@ -1333,16 +1347,36 @@ public class APIController {
 			// title = new String(title.getBytes("8859_1"), "UTF-8");
 
 			// System.out.println("board_id:"+board_id);
+
 			Enumeration<?> files = multi.getFileNames();
 
 			while (files.hasMoreElements()) {
-				String file1 = (String) files.nextElement();
+				String file1 = (String)files.nextElement();
 
 				uploadFile = multi.getOriginalFileName(file1);
 				newFileName = multi.getFilesystemName(file1);
 
+				String extension=""; //파일 확장자
+				int index = uploadFile.lastIndexOf(".");
+				if (index > 0) extension = uploadFile.substring(index+1);
+
 				File file = multi.getFile(file1);
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!추가된 이미지: " + uploadFile);
+
+				System.out.println("filename:"+newFileName);
+				System.out.println("extension:"+extension+"파일");
+
+				if(file!=null)
+					System.out.println("what's this?"+file.getName());
+
+				//파일의 저장 경로?
+				Path path=Paths.get(savePath, newFileName);
+				System.out.println("파일 저장 경로:"+path);
+
+				File2 savefile=new File2();
+				savefile.setFile_name(newFileName);
+
+				test.add(savefile);
+				//paths.add(path);
 			}
 
 		} catch (Exception e) {
@@ -1350,12 +1384,13 @@ public class APIController {
 		}
 
 		postRepository.updateByPost_id(title, content, post_id);
+
 		// 제목과 내용은 수정되는데 파일은 수정이 안되고 처음에 올린 그대로 올라감
 		if (uploadFile != null) {
-			File2 file = new File2();
-			file.setFile_name(uploadFile);
-			file.setPost(postRepository.findById(post_id).get());
-			fileRepository.save(file);
+			for(File2 file:test) {
+				file.setPost(postRepository.findById(post_id).get());
+				fileRepository.save(file);
+			}
 		}
 		if (uploadFile == null)
 			System.out.println("저장된 파일이 없어요");
@@ -1371,7 +1406,7 @@ public class APIController {
 	@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.GET)
 	public String postWrite(@PathVariable("board_id") int board_id, Model model, final HttpSession session,
 			HttpServletRequest request, HttpServletResponse response) {
-		User user = (User) session.getAttribute("user");
+		//User user = (User) session.getAttribute("user");
 		Post post = new Post();
 		File2 file = new File2();
 
@@ -1391,19 +1426,28 @@ public class APIController {
 	}
 
 	@RequestMapping(value = "postWrite/{board_id}", method = RequestMethod.POST)
-	public String postWrite(final HttpSession session, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public String postWrite(final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		//뒤로가기+경고문 추가
+		User u = (User) session.getAttribute("user");
+		if(u==null) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('로그인 후 이용해 주세요'); location.href='../login';</script>");
+			out.flush();
+		}
+
 		System.out.println("postWrite");
 		// 10Mbyte 제한
-		// ServletContext ctx = request.getServletContext();
+		//ServletContext ctx = request.getServletContext();
 		// 10Mbyte 제한
-		int maxSize = 1024 * 1024 * 10;
+		int maxSize  = 1024*1024*10;
 
 		// 웹서버 컨테이너 경로
 		String root = request.getSession().getServletContext().getRealPath("/");
-		System.out.println("root:" + root);
+		System.out.println("root:"+root);
 		// 파일 저장 경로(ex : /home/tour/web/ROOT/upload)
 		String savePath = root + "upload/";
+		System.out.println("저장경로:"+savePath);
 
 		// 업로드 파일명
 		String uploadFile = "";
@@ -1411,81 +1455,98 @@ public class APIController {
 		// 실제 저장할 파일명
 		String newFileName = "";
 
+//		int read = 0;
+//		byte[] buf = new byte[1024];
+//		FileInputStream fin = null;
+//		FileOutputStream fout = null;
+//		long currentTime = System.currentTimeMillis();
+//		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+		String title=""; //글 제목
+		String content=""; //내용
+		//int user_idx=u.getUser_idx(); //작성자
+		int board_id=0;
+
+		List<File2> test=new ArrayList<>();
+		//List<Path> paths=new ArrayList<>();
+
 		List<String> added_files = new ArrayList<>();
 
-		int read = 0;
-		byte[] buf = new byte[1024];
-		FileInputStream fin = null;
-		FileOutputStream fout = null;
-		long currentTime = System.currentTimeMillis();
-		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
-		String title = "";
-		String content = "";
-		int user_idx = 0;
-		int board_id = 0;
-		User user = (User) session.getAttribute("user");
-		if (user == null)
-			System.out.println("nulllll");
-		else
-			System.out.println("id입니다!!!:" + user.getUser_idx());
-		Board board = null;
-		try {
-			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8",
-					new DefaultFileRenamePolicy());
+		Board board=null;
+
+		try{
+			MultipartRequest multi = new MultipartRequest(request, savePath, maxSize, "UTF-8", new DefaultFileRenamePolicy());
 			// 전송받은 parameter의 한글깨짐 방지
 			title = multi.getParameter("title");
 			content = multi.getParameter("content");
-			System.out.println("title:" + title);
-
-			// user_idx = Integer.parseInt(multi.getParameter("user_idx"));
-			System.out.println("user_idx:" + user_idx);
-
-			// Optional<User> optinalEntity = userRepository.findById(user_idx);
-			// user = optinalEntity.get();
 
 			board_id = Integer.parseInt(multi.getParameter("board_id"));
-			Optional<Board> optinalEntity2 = boardRepository.findById(board_id);
-			board = optinalEntity2.get();
+			board = boardRepository.findById(board_id).get();
 
-			// title = new String(title.getBytes("8859_1"), "UTF-8");
+			//테스트
+			System.out.println("------작성된 글------");
+			System.out.println("title:"+title);
+			System.out.println("content:"+content);
+			System.out.println("writer:"+u.getNickname());
+			System.out.println("board:"+board.getBoard_name());
 
-			// System.out.println("board_id:"+board_id);
+			//title = new String(title.getBytes("8859_1"), "UTF-8");
+
 			Enumeration<?> files = multi.getFileNames();
 
-			while (files.hasMoreElements()) {
-				String file1 = (String) files.nextElement();
+			while(files.hasMoreElements()){
+				String file1 = (String)files.nextElement();
 
 				uploadFile = multi.getOriginalFileName(file1);
 				newFileName = multi.getFilesystemName(file1);
 
-				// File file = multi.getFile(file1);
-				added_files.add(uploadFile);
+				String extension=""; //파일 확장자
+				int index = uploadFile.lastIndexOf(".");
+				if (index > 0) extension = uploadFile.substring(index+1);
+
+				File file = multi.getFile(file1);
+
+				System.out.println("filename:"+newFileName);
+				System.out.println("extension:"+extension+"파일");
+
+				if(file!=null)
+					System.out.println("what's this?"+file.getName());
+
+				//파일의 저장 경로?
+				Path path=Paths.get(savePath, newFileName);
+				System.out.println("파일 저장 경로:"+path);
+
+				File2 savefile=new File2();
+				savefile.setFile_name(newFileName);
+
+				test.add(savefile);
+				//paths.add(path);
+
 			}
 
-		} catch (Exception e) {
+		} catch(Exception e){
 			e.printStackTrace();
 		}
 
-		Post p = postRepository.save(new Post(user, board, title, content, 0, new Date()));
+		Post p=postRepository.save(new Post(u,board,title,content,0,new Date()));
 
-		if (added_files.size() > 0) {
-			if (added_files.size() > 0) {
-				if (uploadFile != null) {
-					for (int i = 0; i < added_files.size(); i++) {
-						File2 file = new File2();
-						file.setFile_name(added_files.get(i));
-						file.setPost(p);
-						fileRepository.save(file);
-					}
-				}
+		//파일 db에 저장하기
+		if (uploadFile != null) {
+			for(File2 file:test) {
+				file.setPost(p);
+				fileRepository.save(file);
 			}
 		}
 
-		System.out.println(newFileName);
-		System.out.println(uploadFile);
+//		HashMap<Integer,Path> file_paths=new HashMap<>();
+//
+//		for(int i=0;i<test.size();i++) {
+//			System.out.println(test.get(i).getFile_name()+"의 저장경로:"+paths.get(i));
+//			file_paths.put(test.get(i).getFile_id(), paths.get(i));
+//		}
 
-		System.out.println("작성 완료");
-		return "redirect:/page/post/" + p.getPost_id();
+		System.out.println("작성완료");
+		return "redirect:/page/post/"+p.getPost_id();
 	}
 
 	// 유저가 쓴 글 보기

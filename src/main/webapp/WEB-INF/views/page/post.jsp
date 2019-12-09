@@ -167,9 +167,9 @@
 								<div>
 									<br>
 									<c:forEach var="file" items="${files}">
-										<c:set var="ext" value="${extensions.get(file.file_id)}" />
-										<a href="../../upload/${file.file_name}" download>${file.file_name}</a>
+										[<a href="../../upload/${file.file_name}" download style="color:#848484">${file.file_name}</a>]&nbsp;
 									</c:forEach>
+								</div>
 						</c:if>
 
 
@@ -272,8 +272,10 @@
 														style="font-weight: 200;">답글달기</a></span>
 												</c:if>
 											</div>
-										</div> <br> <br> <br> <br> <br> <!--대댓글 목록-->
-										<div style="color: grey">
+										</div> 
+										<br> <br> <br> <br> <br> 
+										<!--대댓글 목록--><!--길이-->
+										<div <c:if test="${comments.replies.size()>0}"> style="margin-top:20px;"</c:if>>
 											<ul class="reply_ul">
 												<c:forEach var="replies" items="${comments.replies}"
 													varStatus="status">

@@ -35,6 +35,9 @@
 						<li class="nav-item">
 							<<c:if test="${infonav!=2}">a class="nav-link"</c:if><c:if test="${infonav==2}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="relative">관련 사이트</a>
 						</li>
+						<li class="nav-item">
+							<<c:if test="${infonav!=3}">a class="nav-link"</c:if><c:if test="${infonav==3}">a class="nav-link active"</c:if> style="cursor: pointer" data-url="help">사이트 이용 정보</a>
+						</li>
 					</ul>
 				</div>
 

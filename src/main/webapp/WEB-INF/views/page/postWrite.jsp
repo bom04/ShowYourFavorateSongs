@@ -25,7 +25,8 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	
-	<script type="text/javascript">
+<script type="text/javascript">
+
 	$(document).ready(function() {
 		$('.post_body_input').on('keyup', function() {
 
@@ -38,13 +39,48 @@
 		});
 
 	});
+	
 	function check() {
 		if($('input[name=title]').val()=='') {
 			alert('제목은 필수 요소입니다.');
 			return false;
 		}
+		for(var i=1;i<=5<c:if test="${filelist.size()>0}">-${filelist.size()}</c:if>;i++){
+			if($('input[name=filename' + i + ']').val()==''){
+				$("#fileid"+i).remove();
+			}
+		}
 		return true;	
 	}
+	
+</script>
+	
+	<script type="text/javascript">
+		
+		$(document).ready(function() {
+			var count=1;
+			var filename='filename'
+			var fileroute='file_route'
+			var fileid='fileid'
+			
+			$("#attachAdd").click(function() {	
+				if(count<c:if test="${filelist.size()>0}">+${filelist.size()}</c:if>==5) {alert('한 게시글에 최대 5개의 파일만 등록할 수 있습니다');}
+				
+				else {
+					count=count+1;
+					filename='filename'+count;
+					fileroute='file_route'+count;
+					fileid='fileid'+count;	
+
+					//alert(fileid)
+					$inputFile = $("<label class=\"btn btn-primary btn-sm\" style=\"margin-top:5px;\">파일 첨부<input type=\"file\" name=\"" + filename + "\" onchange=\"javascript:document.getElementById('" + fileroute + "').value=this.value\" aria-describedby=\"fileHelp\" id=\"" + fileid + "\"/></label><input type=\"text\" readonly=\"readonly\" title=\"File Route\" id=\"" + fileroute + "\"><br>");
+					$("#fileForm").append($inputFile);
+				}
+				
+			});
+
+		});
+	
 	</script>
 
 <body>
@@ -66,8 +102,10 @@
 				<div class="container">
 					<div class="jumbotron" style="margin-top: 40px;">
 
-						<form:form method="post" modelAttribute="post" onsubmit="return check()"
+						<form:form method="post" modelAttribute="post" onsubmit="return window.check()"
 							enctype="multipart/form-data">
+							 <input type="hidden" maxlength="45" name="a" id="a"
+									class="post_title_input">
 							<c:choose>
 								<c:when
 									test="${(user.manager eq 'false') &&(postModify ne 'yes') }">
@@ -146,7 +184,7 @@
 							</c:choose>
 							<!--제목-->
 							<div style="margin-top: 30px;">
-								<input type="text" maxlength="45" name="title" id="Title"
+								<input type="text" maxlength="45" name="title" id="title"
 									class="post_title_input" placeholder="제목을 입력하세요"
 									value="${post.title}" />
 							</div>
@@ -161,10 +199,17 @@
 							
 							<hr class="my-4" style="clear: both;">
 							<!--파일 첨부-->
-							<div style="padding-left: 10px;">
-								<label for="inputFile">파일 첨부</label>
-								<input type="file" name="filename" class="form-control-file" aria-describedby="fileHelp" multiple>
+							<div class="file_input" id="fileForm" style="padding-left: 10px;">
+								<label class="btn btn-primary btn-sm" style="margin-top:5px;">파일 첨부
+									<input type="file" name="filename1" aria-describedby="fileHelp"
+									onchange="javascript:document.getElementById('file_route').value=this.value" id="fileid1">
+								</label>
+								<input type="text" readonly="readonly" title="File Route" id="file_route">
+								<br>
 							</div>
+							<br>
+							
+							<button type="button" class="btn btn-primary btn-sm" id="attachAdd" style="margin-left:10px;margin-bottom:30px;">파일 추가</button>
 							
 							<br>
 							
