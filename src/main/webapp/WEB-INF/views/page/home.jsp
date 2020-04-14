@@ -84,7 +84,7 @@
 								style="width: 333px; height: 350px; background: #D8D8D8; margin-right: 21px; padding: 60px 30px; text-align: center;">
 								<h2>베스트 게시판</h2>
 								<h2>-</h2>
-								<p style="color: #151515; font-weight: 400;">지금 가장 HOT한 게시글을
+								<p style="color: #151515; font-weight: 400;">지금 가장 인기있는 게시글을
 									읽어보세요</p>
 								<button type="button" class="btn btn-primary"
 									style="margin-top: 40px; width: 120px;"

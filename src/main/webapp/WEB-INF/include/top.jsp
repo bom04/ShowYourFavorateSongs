@@ -80,6 +80,12 @@
 							<li><a data-url="/page/help" style="cursor: pointer">사이트 이용 정보</a></li>
 						</ul>
 					</li>
+					<li class="nav-item">
+						<!--채팅 링크-->
+						<a class="nav-link" href="#" 
+						onclick="window.open('chat', 'pop01', 'top=20, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no');" 
+						style="cursor: pointer">채팅</a>
+					</li>
 				</ul>
 				<c:choose>
 					<c:when test="${empty user}">
@@ -103,17 +109,21 @@
 								</ul>
 							</c:when>
 							<c:otherwise>
-								<ul class="nav navbar-nav">
+								<ul class="nav navbar-nav" >
+									<li class="nav-item">
+										<h5 style="color: white; padding: 13px 15px 10px 15px;">${user.nickname}님</h5>
+									</li>
+									
 									<li class="nav-item"><a class="nav-link logout"
 										data-url="/page/user?user_idx=${ user.user_idx}&kara_type=0&sort=0"
 										style="color: white; cursor: pointer; border: 1px solid #585858; padding: 10px 15px 10px 15px;">마이페이지</a>
 									</li>
-								</ul>
-								<ul class="nav navbar-nav">
+									
 									<li class="nav-item"><a class="nav-link login"
 										data-url="/page/logout"
 										style="color: white; cursor: pointer; border: 1px solid #585858;">로그아웃</a>
 									</li>
+									
 								</ul>
 							</c:otherwise>
 						</c:choose>

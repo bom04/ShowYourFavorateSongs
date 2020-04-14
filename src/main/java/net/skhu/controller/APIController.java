@@ -121,6 +121,24 @@ public class APIController {
 	@Autowired
 	UploadProperties uploadProperties;
 
+	// 채팅방
+	@RequestMapping(value="chat", method=RequestMethod.GET)
+	public ModelAndView chat(Model model,final HttpSession session,HttpServletRequest request, HttpServletResponse response) throws IOException {		
+		User user = (User) session.getAttribute("user");
+		model.addAttribute("user", user);
+		if(user==null) {
+			System.out.println("현재로그인안함");
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('로그인 후 이용하세요'); window.close()</script>");
+			out.flush();
+		}
+		System.out.println("채팅유저"+user.getNickname());
+		ModelAndView mv = new ModelAndView("page/chat"); // page 폴더에 있는 chat.jsp 불러옴
+		return mv;
+
+	}
+
 	// 가입
 	@RequestMapping(value = "join", method = RequestMethod.GET)
 	public String join(Model model, UserModel userModel) {
@@ -512,12 +530,17 @@ public class APIController {
 		User user = optinalEntity2.get();
 		List<Song_like> song_likes=song_likeRepository.findByUser_idxAndKara_type(user.getUser_idx(),kara_type);
 		User me = (User) session.getAttribute("user");
+		
 
+		
 		Optional<User> mee=null;
 		User me2=null; // 세션한 저장된 로그인된 유저를 저장함(바로 세션에서 이용하면 no session 오류 발생해서..)
 		boolean followResult=false;
 
 		if(me!=null) {
+			System.out.println("현재 로그인한 유저!!!!!!!!"+me.getNickname());
+			System.out.println("보고있는 페이지 주인!!!!!!!!"+user.getNickname());
+			
 			mee=userRepository.findById(me.getUser_idx());
 			me2=mee.get();
 			for(int i=0;i<me2.getUsers2().size();i++) { // 바로 session으로 getUsers2를 접근하면 no session 오류 발생해서 우회로 해결
@@ -558,7 +581,7 @@ public class APIController {
 			};
 		}
 		Collections.sort(song_likes,salesComparator);
-		model.addAttribute("me",me);
+		model.addAttribute("user",me);
 		model.addAttribute("songs",song_likes);
 		model.addAttribute("u",user); // 로그인한
 		// 자신이
@@ -622,6 +645,11 @@ public class APIController {
 		//		System.out.println("changeProfile post");
 		//		System.out.println("nickname:" + nickname + " message:" + message + " password:" + password);
 		userRepository.updateProfile(user.getUser_idx(), profileUserModel.getMessage(), profileUserModel.getNickname(), profileUserModel.getPassword());
+		//user = userRepository.findById(user.getUser_idx()).get();
+		
+		user.setNickname(profileUserModel.getNickname());//0406추가: 세션에 닉네임 변경사항 저장한
+		
+		System.out.println("변경한 닉네임!!!"+user.getNickname());
 		return "redirect:/page/user?user_idx=" + user.getUser_idx() + "&kara_type=0&sort=0";
 	}
 
@@ -1455,12 +1483,12 @@ public class APIController {
 		// 실제 저장할 파일명
 		String newFileName = "";
 
-//		int read = 0;
-//		byte[] buf = new byte[1024];
-//		FileInputStream fin = null;
-//		FileOutputStream fout = null;
-//		long currentTime = System.currentTimeMillis();
-//		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
+		//		int read = 0;
+		//		byte[] buf = new byte[1024];
+		//		FileInputStream fin = null;
+		//		FileOutputStream fout = null;
+		//		long currentTime = System.currentTimeMillis();
+		//		SimpleDateFormat simDf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 		String title=""; //글 제목
 		String content=""; //내용
@@ -1538,12 +1566,12 @@ public class APIController {
 			}
 		}
 
-//		HashMap<Integer,Path> file_paths=new HashMap<>();
-//
-//		for(int i=0;i<test.size();i++) {
-//			System.out.println(test.get(i).getFile_name()+"의 저장경로:"+paths.get(i));
-//			file_paths.put(test.get(i).getFile_id(), paths.get(i));
-//		}
+		//		HashMap<Integer,Path> file_paths=new HashMap<>();
+		//
+		//		for(int i=0;i<test.size();i++) {
+		//			System.out.println(test.get(i).getFile_name()+"의 저장경로:"+paths.get(i));
+		//			file_paths.put(test.get(i).getFile_id(), paths.get(i));
+		//		}
 
 		System.out.println("작성완료");
 		return "redirect:/page/post/"+p.getPost_id();

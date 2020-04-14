@@ -34,10 +34,10 @@
 			<div id="content">
 				<div
 					style="text-align: center; padding-top: 200px; padding-bottom: 20px;">
-					<c:if test="${me.user_idx==u.user_idx}">
+					<c:if test="${user.user_idx==u.user_idx}">
 						<p style="font-size: 23pt;font-weight:550;color:black">마이페이지</p>
 					</c:if>
-					<c:if test="${me.user_idx!=u.user_idx}">
+					<c:if test="${user.user_idx!=u.user_idx}">
 						<p style="font-size: 23pt;font-weight:550;color:black">${u.nickname}님의 개인페이지</p>
 					</c:if>
 				</div>
