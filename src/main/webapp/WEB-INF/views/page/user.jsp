@@ -94,7 +94,7 @@
 						<div style="margin-top: 30px; color: #2E2E2E;">
 							<!--모달열기-->
 							<span style="font-weight: bold; margin-right: 20px;"> 
-								<a href="javascript:void(0);" data-toggle="modal"
+								<a href="#" data-toggle="modal"
 								data-target="#myModal" style="text-decoration: none;"> 팔로잉 
 									<c:choose>
 										<c:when test="${empty followingList}">&nbsp;&nbsp;0</c:when>
