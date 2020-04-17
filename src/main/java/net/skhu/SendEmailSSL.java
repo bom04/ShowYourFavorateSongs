@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class SendEmailSSL { // 이메일 보내기 위해 만든 클래스
 	final String username = "iris21kr@gmail.com"; // 이메일을 보낼 계정 쓰기
-	final String password = "dnqls13579"; // 이메일을 보낼 계정의 비밀번호 쓰기(실제 이메일,비밀번호 안쓰면 에러)
+	final String password = "rnrmf@Lyy1998!"; // 이메일을 보낼 계정의 비밀번호 쓰기(실제 이메일,비밀번호 안쓰면 에러)
 	Properties prop;
 
 	public SendEmailSSL() {

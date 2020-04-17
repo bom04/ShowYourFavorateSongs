@@ -7,16 +7,16 @@
 <c:url var="R" value="/" />
 
 <script
-   src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script
-   src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="${R}res/common.js"></script>
 <link rel="stylesheet" href="${R}res/common.css">
 
 
 <!-- jQuery -->
 <script
-   src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script type="text/javascript">
    var textarea;
    var inputMessage;
@@ -85,7 +85,7 @@
               document.getElementById("peopleNum").innerHTML="현재 접속자 수:"+num;
               let peopleList='';
               for(let i=0;i<final_data.length;i++) {
-                    peopleList+=final_data[i]+"<br>";
+              		peopleList+=final_data[i]+"<br>";
               }
               document.getElementById("peopleName").innerHTML=peopleList;
             }
@@ -99,7 +99,7 @@
               document.getElementById("peopleNum").innerHTML="현재 접속자 수:"+num;
                let peopleList='';
               for(let i=0;i<final_data.length;i++) {
-                    peopleList+=final_data[i]+"<br>";
+              		peopleList+=final_data[i]+"<br>";
               }
               document.getElementById("peopleName").innerHTML=peopleList;
             }
@@ -113,7 +113,7 @@
           console.log(final_data);
            let peopleList='';
               for(let i=0;i<final_data.length;i++) {
-                    peopleList+=final_data[i]+"<br>";
+              		peopleList+=final_data[i]+"<br>";
               }
           document.getElementById("peopleName").innerHTML=peopleList;
         }  else {
@@ -160,48 +160,49 @@
 </script>
 
 <body>
-   <header>
-      <div style="background:black; height:90px; padding:30px;"><h4 align="center" style="color:white;">🎤너의 18번을 들려줘 채팅방</h4></div>
-   </header>
-   
-   <section>
-      <div id="bg_img" style="background-image:url('${pageContext.request.contextPath}/res/images/chat.gif'); height:86%; background-repeat: no-repeat; background-size: cover; 
-            background-attachment: fixed;"></div>
-      <button onclick="connectWs()" id="startBtn" type="button" class="btn btn-primary btn-lg btn-block" style="position:fixed; bottom:0;">채팅 시작하기</button>
+	<header>
+		<div style="background:black; height:90px; padding:30px;"><h4 align="center" style="color:white;">🎤너의 18번을 들려줘 채팅방</h4></div>
+	</header>
+	
+	<section>
+		<div id="bg_img" style="background-image:url('${pageContext.request.contextPath}/res/images/chat.gif'); height:86%; background-repeat: no-repeat; background-size: cover; 
+				background-attachment: fixed;"></div>
+		<button onclick="connectWs()" id="startBtn" type="button" class="btn btn-primary btn-lg btn-block" style="position:fixed; bottom:0;">채팅 시작하기</button>
 
-      <div id="_chatbox" style="display: none; padding:20px 10px 100px;">
-         <fieldset>
-            <div id="messageWindow" style="text-align:center; display:inline; clear:both;"></div>
-            
-            <div style="border:1px solid #D8D8D8; padding:20px; margin-top:320px; text-align:center; clear:both;">
-               <input class="form-control mr-sm-2" id="inputMessage" type="text" onkeyup="enterkey()" placeholder="메시지 입력" autofocus style="display:inline-block; width:80%"/>
-               <button type="submit" class="btn btn-primary" onclick="send()" style="display:inline-block; border:0px;"/>보내기</button>
-            </div>
-            <div style="text-align:center; margin-top:30px;">
-               <div id="peopleNum" style="display:inline-block; margin-right:20px;"></div>
-               <button type="button" class="btn btn-primary" id="myBtn2">참여자 보기</button>
-            </div>
-         </fieldset>
-       </div>
-      
-   </section>
-   
-         <div class="modal" id="myModal2" style="top:200px;">
-            <div class="modal-dialog" role="document">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     현재 채팅 참여자
-                  </div>
-      
-                  <div class="modal-body">
-                     <div id="peopleName"></div>
-                  </div>
-                  <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                  </div>
-               </div>
-            </div>
-         </div>
+		<div id="_chatbox" style="display: none; padding:20px 10px 100px;">
+			<fieldset>
+				<div id="messageWindow" style="text-align:center; display:inline; clear:both;"></div>
+				
+				<div style="border:1px solid #D8D8D8; padding:20px; margin-top:320px; text-align:center; clear:both;">
+					<input class="form-control mr-sm-2" id="inputMessage" type="text" onkeyup="enterkey()" placeholder="메시지 입력" autofocus style="display:inline-block; width:80%"/>
+					<button type="submit" class="btn btn-primary" onclick="send()" style="display:inline-block; border:0px;"/>보내기</button>
+				</div>
+				<div style="text-align:center; margin-top:30px;">
+					<div id="peopleNum" style="display:inline-block; margin-right:20px;"></div>
+					<button type="button" class="btn btn-primary" id="myBtn2">참여자 보기</button>
+				</div>
+			</fieldset>
+	    </div>
+		
+	</section>
+	
+			<div class="modal" id="myModal2" style="top:200px;">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							현재 채팅 참여자
+						</div>
+		
+						<div class="modal-body">
+							<div id="peopleName"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
-   
+	
 </body>
+</html>

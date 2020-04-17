@@ -581,7 +581,7 @@ public class APIController {
 			};
 		}
 		Collections.sort(song_likes,salesComparator);
-		model.addAttribute("user",me);
+		model.addAttribute("me",me);
 		model.addAttribute("songs",song_likes);
 		model.addAttribute("u",user); // 로그인한
 		// 자신이

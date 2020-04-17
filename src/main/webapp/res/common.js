@@ -471,6 +471,14 @@ $(function() {
 		$.fn.modal = old
 		return this
 	}
+	
+	//0416 모달 함수 추가
+    $(document).ready(function(){
+    	$("#myBtn2").click(function(){
+        	$("#myModal2").modal();
+    	});
+	});
+    
 
 
 	// MODAL DATA-API
