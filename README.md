@@ -2,18 +2,19 @@
 # ShowYourFavorateSongs_WEB
 > 2019-2 DB 캡스톤 [완성본]
 > 
-> 노래방을 좋아하는 사람들을 위한 노래방 애창곡 저장+커뮤니티+정보 기능 제공
+> 노래방을 좋아하는 사람들을 위한 노래방 애창곡 저장+커뮤니티+정보 제공+채팅 기능
 
 ## 개발 기간
 2019 9월 초~12월 중순
 
 ##  개발에 사용한 시스템, 도구
-* Spring
+* Spring Boot (JPA)
 * MySQL Workbench
 * PyCharm
 * KakaoMap WEB api
 * Google SMTP
 * Cos.jar
+* WebSocket
 
 ## 기능 (Youtube 시연 영상)
 1. 회원가입, 비밀번호 찾기, 로그인 기능
@@ -31,7 +32,9 @@
 7. 관리자 기능
 [https://www.youtube.com/watch?v=Pxm1pws0H70&list=PL3MVPTjajz0kbm-b6hPig-P75ZgDcCPNw&index=7](https://www.youtube.com/watch?v=Pxm1pws0H70&list=PL3MVPTjajz0kbm-b6hPig-P75ZgDcCPNw&index=7)
 
++ 채팅 추가한 모든 기능
+[https://www.youtube.com/watch?v=6cUIPv1z4zQ&feature=youtu.be]
+
 ## 총평
-JPA를 공부하면서 동시에 코드를 짰기 때문에 체계적으로 코드를 짜기보다는 기능 구현에 중점을 맞춰서 코드가 매우 더럽다. 지금보니 아쉬운 부분이다.
-이후 프로젝트에서는 Service,Dto,Dao 등 체계적으로 나눠서 코드를 짤 예정이다. 
-그래도 잘한 점은 처음에 결정한 기능들을 다 구현했다는 점이다.
+JPA를 공부하면서 동시에 코드를 짰기 때문에 체계적으로 코드를 짜기보다는 기능 구현에 중점을 맞춰서 코드가 매우 더럽다. 
+그래도 잘한 점은 처음에 결정한 기능들을 다 구현했다는 점이나 rest api부분이 보완이 필요하다.
